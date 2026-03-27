@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react';
-import { submitInquiry, fetchContactDetails } from '../services/googleSheets';
+import { Phone, Mail, MapPin, Clock, Send, FileText } from 'lucide-react';
+import { submitInquiry, fetchContactDetails, fetchGlobalSettings } from '../services/googleSheets';
 
 export const Contact = () => {
   const [formData, setFormData] = React.useState({
@@ -12,15 +12,18 @@ export const Contact = () => {
   });
   const [status, setStatus] = React.useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [contactInfo, setContactInfo] = React.useState<any>(null);
+  const [brochure, setBrochure] = React.useState('');
 
   React.useEffect(() => {
-    const loadContact = async () => {
-      const data = await fetchContactDetails();
-      if (data && data.length > 0) {
-        setContactInfo(data[0]);
-      }
+    const loadData = async () => {
+      const [contactData, settings] = await Promise.all([
+        fetchContactDetails(),
+        fetchGlobalSettings()
+      ]);
+      if (contactData) setContactInfo(contactData);
+      if (settings?.brochure) setBrochure(settings.brochure);
     };
-    loadContact();
+    loadData();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -72,9 +75,7 @@ export const Contact = () => {
                   <p className="text-brand-green/60 text-sm leading-relaxed">
                     {contactInfo?.address || (
                       <>
-                        45/47, Sheriff Devji Street (Chakla Street),<br />
-                        Near Zakaria Masjid, Mohammad Ali Road,<br />
-                        Mumbai – 400003
+                        Surat, Gujarat – 395003
                       </>
                     )}
                   </p>
@@ -88,7 +89,7 @@ export const Contact = () => {
                 <div>
                   <h4 className="text-lg font-serif text-brand-green mb-1">Phone Numbers</h4>
                   <p className="text-brand-green/60 text-sm">
-                    {contactInfo?.primaryphone || '+91-022-23450702 / 03'}
+                    {contactInfo?.primaryphone || '+91-261-2345678'}
                   </p>
                   {contactInfo?.secondaryphone && (
                     <p className="text-brand-green/60 text-sm">{contactInfo.secondaryphone}</p>
@@ -115,10 +116,28 @@ export const Contact = () => {
                 </div>
                 <div>
                   <h4 className="text-lg font-serif text-brand-green mb-1">Office Hours</h4>
-                  <p className="text-brand-green/60 text-sm">Monday – Friday: 9:00 AM – 4:00 PM</p>
-                  <p className="text-brand-green/60 text-sm">Saturday: 9:00 AM – 1:00 PM</p>
+                  <p className="text-brand-green/60 text-sm">{contactInfo?.officehours || 'Monday – Friday: 9:00 AM – 4:00 PM'}</p>
+                  {contactInfo?.saturdayhours && (
+                    <p className="text-brand-green/60 text-sm">{contactInfo.saturdayhours}</p>
+                  )}
+                  {!contactInfo?.saturdayhours && !contactInfo?.officehours && (
+                    <p className="text-brand-green/60 text-sm">Saturday: 9:00 AM – 1:00 PM</p>
+                  )}
                 </div>
               </div>
+
+              {brochure && (
+                <div className="pt-8">
+                  <a 
+                    href={brochure} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center px-8 py-4 bg-brand-gold text-brand-green font-bold rounded-xl hover:bg-brand-green hover:text-brand-cream transition-all shadow-lg shadow-brand-gold/20"
+                  >
+                    <FileText className="mr-3" size={24} /> Download School Brochure
+                  </a>
+                </div>
+              )}
             </div>
           </div>
 

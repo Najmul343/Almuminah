@@ -1,8 +1,19 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { FileText, CheckCircle, Info } from 'lucide-react';
+import { fetchGlobalSettings } from '../services/googleSheets';
 
 export const Admissions = () => {
+  const [brochure, setBrochure] = React.useState('');
+
+  React.useEffect(() => {
+    const loadSettings = async () => {
+      const settings = await fetchGlobalSettings();
+      if (settings?.brochure) setBrochure(settings.brochure);
+    };
+    loadSettings();
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -26,9 +37,16 @@ export const Admissions = () => {
               Admissions for the upcoming academic year are now open for selected grades. As an Islamic English Medium School for Girls, we prioritize students who align with our vision of excellence in both academic and spiritual growth.
             </p>
             <div className="flex flex-wrap gap-4">
-              <button className="px-6 py-3 bg-brand-gold text-brand-green font-bold rounded-lg hover:bg-brand-cream transition-colors">
-                Download Inquiry Form
-              </button>
+              {brochure && (
+                <a 
+                  href={brochure} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="px-6 py-3 bg-brand-gold text-brand-green font-bold rounded-lg hover:bg-brand-cream transition-colors flex items-center"
+                >
+                  <FileText className="mr-2" size={20} /> Download Brochure
+                </a>
+              )}
               <button className="px-6 py-3 border border-brand-cream/30 text-brand-cream font-bold rounded-lg hover:bg-brand-cream/10 transition-colors">
                 View Fee Structure
               </button>
