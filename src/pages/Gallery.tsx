@@ -60,7 +60,7 @@ export const Gallery = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {images.map((img, i) => (
               <motion.div
-                key={i}
+                key={img.url || img.image || i}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}

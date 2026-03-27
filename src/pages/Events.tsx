@@ -43,7 +43,7 @@ export const Events = () => {
             <div className="grid grid-cols-1 gap-6">
               {announcements.map((ann, i) => (
                 <motion.div
-                  key={i}
+                  key={`ann-${ann.title}-${i}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
@@ -77,7 +77,7 @@ export const Events = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {events.map((event, i) => (
               <motion.div
-                key={i}
+                key={`event-${event.title}-${i}`}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.1 }}
@@ -197,7 +197,7 @@ const EventImageSlider = ({ images }: { images: string[] }) => {
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-2">
         {images.map((_, i) => (
           <div 
-            key={i} 
+            key={`dot-${i}`} 
             className={`w-2 h-2 rounded-full transition-all ${i === idx ? 'bg-brand-gold w-6' : 'bg-white/50'}`} 
           />
         ))}

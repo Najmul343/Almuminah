@@ -52,10 +52,14 @@ const TopperCarousel = () => {
                 exit={{ opacity: 0, x: -100 }}
                 className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full"
               >
-                {[toppers[currentIndex], toppers[(currentIndex + 1) % toppers.length]].filter(Boolean).map((topper, i) => (
-                  <div key={i} className={cn(
+                {(toppers.length > 1 
+                  ? [toppers[currentIndex], toppers[(currentIndex + 1) % toppers.length]]
+                  : [toppers[currentIndex]]
+                ).filter(Boolean).map((topper, i) => (
+                  <div key={`${topper.name}-${i}`} className={cn(
                     "group relative bg-white rounded-[1.5rem] overflow-hidden shadow-lg border border-brand-green/5 p-3 transition-all hover:scale-[1.02]",
-                    i === 1 && "hidden md:block"
+                    i === 1 && "hidden md:block",
+                    toppers.length === 1 && "mx-auto max-w-sm"
                   )}>
                     <div className="aspect-square rounded-[1rem] overflow-hidden relative">
                       <img 
@@ -115,7 +119,7 @@ const PhilosophySHARP = () => {
         <div className="space-y-12 max-w-3xl mx-auto">
           {steps.map((step, i) => (
             <motion.div
-              key={i}
+              key={step.letter}
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -160,7 +164,7 @@ const PetalsOfPurpose = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {petals.map((petal, i) => (
             <motion.div
-              key={i}
+              key={petal.title}
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -325,7 +329,7 @@ const Stats = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, i) => (
-            <div key={i} className="text-center">
+            <div key={stat.label} className="text-center">
               <div className="text-4xl font-serif font-bold text-brand-green mb-1">{stat.value}</div>
               <div className="text-[10px] uppercase tracking-[0.2em] text-brand-gold font-bold">{stat.label}</div>
             </div>
@@ -395,7 +399,7 @@ const Programs = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {levels.map((level, i) => (
             <motion.div 
-              key={i}
+              key={`program-${level.title}-${i}`}
               whileHover={{ y: -10 }}
               className="group cursor-pointer"
             >
@@ -502,7 +506,7 @@ const Management = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {members.map((leader, i) => (
             <motion.div 
-              key={i}
+              key={`management-${leader.name}-${i}`}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -544,7 +548,7 @@ const WhyChooseUs = () => {
             <h2 className="text-4xl md:text-5xl font-serif mt-4 mb-8">Why Parents Choose Us Over Other Schools</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               {reasons.map((reason, i) => (
-                <div key={i} className="space-y-3">
+                <div key={reason.title} className="space-y-3">
                   <div className="w-10 h-10 bg-brand-gold/20 rounded-lg flex items-center justify-center text-brand-gold">
                     <CheckCircle size={20} />
                   </div>
@@ -584,7 +588,7 @@ const Testimonials = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {reviews.map((review, i) => (
-            <div key={i} className="bg-white p-10 rounded-3xl shadow-sm border border-brand-green/5 italic">
+            <div key={review.name} className="bg-white p-10 rounded-3xl shadow-sm border border-brand-green/5 italic">
               <p className="text-brand-green/70 mb-6 leading-relaxed">"{review.text}"</p>
               <div className="flex items-center space-x-4">
                 <div className="w-10 h-10 bg-brand-gold/20 rounded-full flex items-center justify-center text-brand-gold font-bold">
@@ -637,7 +641,7 @@ const News = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {items.map((item, i) => (
-            <Link to="/events" key={i} className="group cursor-pointer block">
+            <Link to="/events" key={`news-${item.title}-${i}`} className="group cursor-pointer block">
               <div className="aspect-video rounded-2xl bg-brand-green/5 mb-6 overflow-hidden relative">
                 <img 
                   src={(item.images || '').split(',')[0] || 'https://images.unsplash.com/photo-1511629091441-ee46146481b6'} 

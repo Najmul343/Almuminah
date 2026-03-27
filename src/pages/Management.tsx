@@ -149,7 +149,7 @@ const Management = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {faculty.map((member, i) => (
               <motion.div
-                key={i}
+                key={member.name || i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -191,7 +191,7 @@ const Management = () => {
               { name: "Madni School", location: "Surat" },
               { name: "M.A. Meer School", location: "Surat" }
             ].map((school, i) => (
-              <div key={i} className="bg-white/5 border border-white/10 p-8 rounded-2xl text-center hover:bg-white/10 transition-all group">
+              <div key={school.name} className="bg-white/5 border border-white/10 p-8 rounded-2xl text-center hover:bg-white/10 transition-all group">
                 <h4 className="text-2xl font-serif text-brand-gold mb-2 group-hover:scale-105 transition-transform">{school.name}</h4>
                 <p className="text-brand-cream/40 uppercase tracking-widest text-xs">{school.location}</p>
               </div>

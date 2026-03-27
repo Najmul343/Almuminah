@@ -82,7 +82,7 @@ const fetchData = async (tabName: string) => {
         return keys.find(k => keywords.some(kw => k.includes(kw)));
       };
 
-      const imageKey = findKey(['image', 'url', 'images', 'photo', 'picture', 'img', 'src']);
+      const imageKey = findKey(['logo', 'image', 'url', 'images', 'photo', 'picture', 'img', 'src']);
       // Fallback to Column A (index 0) if no image keyword found
       const rawImage = imageKey ? normalized[imageKey] : (obj.image || obj.url || obj[0] || obj['A'] || '');
       const finalImages = fixUrl(rawImage);

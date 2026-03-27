@@ -43,7 +43,7 @@ export const Admissions = () => {
                 { step: "02", title: "Assessment", desc: "Students undergo a basic academic assessment to determine their current level." },
                 { step: "03", title: "Interview", desc: "A brief interaction with the parents and student to understand alignment with school values." }
               ].map((item, i) => (
-                <div key={i} className="space-y-4">
+                <div key={item.title} className="space-y-4">
                   <span className="text-4xl font-serif text-brand-gold/30">{item.step}</span>
                   <h4 className="text-xl font-serif text-brand-green">{item.title}</h4>
                   <p className="text-brand-green/60 text-sm leading-relaxed">{item.desc}</p>
@@ -63,7 +63,7 @@ export const Admissions = () => {
                 "Previous Year's Report Card",
                 "Address Proof"
               ].map((doc, i) => (
-                <div key={i} className="flex items-center space-x-3 p-4 bg-white rounded-xl border border-brand-green/5 shadow-sm">
+                <div key={doc} className="flex items-center space-x-3 p-4 bg-white rounded-xl border border-brand-green/5 shadow-sm">
                   <CheckCircle className="text-brand-gold" size={18} />
                   <span className="text-brand-green/80 text-sm">{doc}</span>
                 </div>

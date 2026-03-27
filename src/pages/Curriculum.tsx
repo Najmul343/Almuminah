@@ -65,7 +65,7 @@ export const Curriculum = () => {
                 { icon: <Book size={24} />, title: "Islamic Competitions", desc: "Qira'at, Naat, and Islamic quiz competitions." },
                 { icon: <CheckCircle size={24} />, title: "Student Council", desc: "Developing leadership skills through active participation." }
               ].map((item, i) => (
-                <div key={i} className="space-y-3">
+                <div key={item.title} className="space-y-3">
                   <div className="text-brand-gold">{item.icon}</div>
                   <h4 className="text-lg font-serif text-brand-green">{item.title}</h4>
                   <p className="text-brand-green/60 text-xs leading-relaxed">{item.desc}</p>
