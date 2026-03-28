@@ -8,7 +8,7 @@ import { fetchSocialMedia, fetchContactDetails, fetchGlobalSettings, prefetchDat
 // Start pre-fetching immediately
 prefetchData();
 
-const Navbar = ({ brochure }: { brochure: string }) => {
+const Navbar = ({ brochure, logo }: { brochure: string; logo: string }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [contact, setContact] = React.useState<any>(null);
   const location = useLocation();
@@ -55,26 +55,22 @@ const Navbar = ({ brochure }: { brochure: string }) => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20 md:h-24 items-center">
-          <Link to="/" className="flex items-center space-x-2 md:space-x-3 shrink-0 mr-2 md:mr-4">
-            <div className="w-10 h-10 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center text-brand-green font-georgia text-lg md:text-xl font-bold border-2 border-brand-gold overflow-hidden shrink-0 shadow-sm">
-              {contact?.logo || contact?.image ? (
-                <img 
-                  src={contact.logo || contact.image} 
-                  alt="School Logo" 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              ) : (
-                "M"
-              )}
+        <div className="flex justify-between h-24 md:h-32 items-center">
+          <Link to="/" className="flex items-center space-x-4 md:space-x-6 shrink-0 mr-4 md:mr-8">
+            <div className="w-14 h-14 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center text-brand-green font-georgia text-xl md:text-3xl font-bold border-2 border-brand-gold overflow-hidden shrink-0 shadow-sm">
+              <img 
+                src="https://lh3.googleusercontent.com/d/1v-Y_7_T_X_X_X_X_X_X_X_X_X_X_X_X" 
+                alt="School Logo" 
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
             </div>
             <div className="flex flex-col w-fit">
-              <span className="text-sm md:text-lg font-georgia font-bold tracking-tight text-brand-green leading-none whitespace-nowrap">
+              <span className="text-lg md:text-3xl font-georgia font-bold tracking-tight text-brand-green leading-none whitespace-nowrap">
                 AL-MU'MINAH SCHOOL
               </span>
-              <div className="h-[1px] bg-brand-green/20 w-full my-0.5 md:my-1" />
-              <div className="flex justify-between text-[8px] md:text-[12px] uppercase font-bold text-brand-gold font-georgia tracking-tighter">
+              <div className="h-[1px] bg-brand-green/20 w-full my-1.5 md:my-2" />
+              <div className="flex justify-between text-[11px] md:text-[16px] uppercase font-bold text-brand-gold font-georgia tracking-tighter">
                 <span>EDUCATION</span>
                 <span>FOR</span>
                 <span>BOTH</span>
@@ -186,7 +182,7 @@ const Navbar = ({ brochure }: { brochure: string }) => {
   );
 };
 
-const Footer = () => {
+const Footer = ({ logo }: { logo: string }) => {
   const [socials, setSocials] = React.useState<any[]>([]);
   const [contact, setContact] = React.useState<any>(null);
 
@@ -213,29 +209,25 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-brand-green text-brand-cream pt-20 pb-10">
+    <footer className="bg-brand-green text-brand-cream pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
-          <div className="space-y-6">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center text-brand-green font-georgia text-2xl font-bold border-2 border-brand-gold overflow-hidden shrink-0 shadow-lg shadow-black/20">
-                {contact?.logo || contact?.image ? (
-                  <img 
-                    src={contact.logo || contact.image} 
-                    alt="School Logo" 
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                ) : (
-                  "M"
-                )}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-12 lg:gap-x-24 mb-20">
+          <div className="lg:col-span-2 space-y-8">
+            <div className="flex items-center space-x-6 mb-8">
+              <div className="w-20 h-20 md:w-32 md:h-32 bg-white rounded-full flex items-center justify-center text-brand-green font-georgia text-3xl md:text-4xl font-bold border-2 border-brand-gold overflow-hidden shrink-0 shadow-lg shadow-black/20">
+                <img 
+                  src="https://lh3.googleusercontent.com/d/1v-Y_7_T_X_X_X_X_X_X_X_X_X_X_X_X" 
+                  alt="School Logo" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
               </div>
               <div className="flex flex-col w-fit">
-                <span className="text-base md:text-lg font-georgia font-bold tracking-tight leading-none text-brand-cream whitespace-nowrap">
+                <span className="text-xl md:text-4xl font-georgia font-bold tracking-tight leading-none text-brand-cream whitespace-nowrap">
                   AL-MU'MINAH SCHOOL
                 </span>
-                <div className="h-[1px] bg-brand-cream/20 w-full my-1" />
-                <div className="flex justify-between text-[10px] md:text-[12px] uppercase font-bold text-brand-gold font-georgia tracking-tighter">
+                <div className="h-[1px] bg-brand-cream/20 w-full my-2" />
+                <div className="flex justify-between text-[12px] md:text-[18px] uppercase font-bold text-brand-gold font-georgia tracking-tighter">
                   <span>EDUCATION</span>
                   <span>FOR</span>
                   <span>BOTH</span>
@@ -402,11 +394,13 @@ const ScrollNavigation = ({ whatsapp }: { whatsapp: string }) => {
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   const [brochure, setBrochure] = React.useState('');
   const [whatsapp, setWhatsapp] = React.useState('');
+  const [logo, setLogo] = React.useState('');
 
   React.useEffect(() => {
     const loadSettings = async () => {
       const settings = await fetchGlobalSettings();
       if (settings?.brochure) setBrochure(settings.brochure);
+      if (settings?.logo) setLogo(settings.logo);
       if (settings?.whatsapp) {
         const cleanNumber = settings.whatsapp.toString().replace(/\D/g, '');
         setWhatsapp(cleanNumber);
@@ -418,7 +412,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <ScrollToTop />
-      <Navbar brochure={brochure} />
+      <Navbar brochure={brochure} logo={logo} />
       <main className="flex-grow pt-28 md:pt-32">
         {children}
       </main>
@@ -454,7 +448,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
         </a>
       </div>
 
-      <Footer />
+      <Footer logo={logo} />
     </div>
   );
 };

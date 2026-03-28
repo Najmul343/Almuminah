@@ -1,6 +1,8 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, BookOpen, GraduationCap, Heart, Star, CheckCircle, ChevronLeft, ChevronRight, Send, Camera, Palette, Shield, Zap, Cpu, FileText } from 'lucide-react';
+import { Skeleton, EmptyState, ErrorState } from '../components/Feedback';
+import { ArrowRight, BookOpen, GraduationCap, Heart, Star, CheckCircle, ChevronLeft, ChevronRight, Send, Camera, Palette, Shield, Zap, Cpu, FileText, UserCheck, Video, ShieldCheck, Users, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { submitInquiry, fetchToppers, fetchEvents, fetchPrograms, fetchFaculty, fetchGlobalSettings, fetchStats } from '../services/googleSheets';
@@ -23,7 +25,7 @@ const TopperCarousel = () => {
   const prev = () => toppers.length > 0 && setCurrentIndex((prev) => (prev - 1 + toppers.length) % toppers.length);
 
   if (loading) return (
-    <div className="py-24 bg-brand-gold/10 flex items-center justify-center">
+    <div className="py-16 bg-brand-gold/10 flex items-center justify-center">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-gold"></div>
     </div>
   );
@@ -31,11 +33,11 @@ const TopperCarousel = () => {
   if (toppers.length === 0) return null;
 
   return (
-    <section className="py-24 bg-brand-gold/10 overflow-hidden">
+    <section className="py-12 bg-brand-gold/10 overflow-hidden">
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <span className="text-brand-gold font-bold uppercase tracking-widest text-xs">Academic Excellence</span>
-          <h2 className="text-4xl font-serif text-brand-green mt-4">Our Proud Toppers</h2>
+        <div className="text-center mb-10">
+          <span className="text-brand-gold font-bold uppercase tracking-widest text-sm">Academic Excellence</span>
+          <h2 className="text-5xl font-serif text-brand-green mt-4">Our Proud Toppers</h2>
         </div>
 
         <div className="relative group">
@@ -109,11 +111,11 @@ const PhilosophySHARP = () => {
   const [activeIndex, setActiveIndex] = React.useState<number>(0);
 
   return (
-    <section className="py-24 bg-brand-green text-brand-cream overflow-hidden">
+    <section className="py-12 bg-brand-green text-brand-cream overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16 md:mb-24">
-          <span className="text-brand-gold font-bold uppercase tracking-widest text-xs">Our Core Values</span>
-          <h2 className="text-4xl font-serif mt-4">The SHARP Philosophy</h2>
+        <div className="text-center mb-10 md:mb-12">
+          <span className="text-brand-gold font-bold uppercase tracking-widest text-sm">Our Core Values</span>
+          <h2 className="text-5xl font-serif mt-4">The SHARP Philosophy</h2>
         </div>
 
         {/* Desktop Layout: Compact Grid */}
@@ -231,68 +233,42 @@ const PhilosophySHARP = () => {
 const PetalsOfPurpose = () => {
   const petals = [
     { title: "A Fortress of Care", desc: "Zero compromise on your child's safety and well-being.", icon: Shield, color: "bg-blue-500/10 text-blue-600" },
-    { title: "Cultivating the X Factor", desc: "Excellence and unique talents needed to thrive.", icon: Zap, color: "bg-yellow-500/10 text-yellow-600" },
-    { title: "Modern Infrastructure", desc: "State-of-the-art facilities for the best learning.", icon: Cpu, color: "bg-purple-500/10 text-purple-600" },
+    { title: "Cultivating the X Factor", desc: "Excellence and unique talents needed to thrive.", icon: Star, color: "bg-yellow-500/10 text-yellow-600" },
+    { title: "Modern Infrastructure", desc: "State-of-the-art facilities for the best learning.", icon: GraduationCap, color: "bg-purple-500/10 text-purple-600" },
     { title: "Never A Dull Day", desc: "Diverse interests and niches created together.", icon: Palette, color: "bg-pink-500/10 text-pink-600" },
     { title: "From ABC to AI", desc: "Solid academic foundation with access to latest tech.", icon: Cpu, color: "bg-emerald-500/10 text-emerald-600" },
   ];
 
   return (
-    <section className="py-24 bg-white overflow-hidden">
+    <section className="py-12 bg-white overflow-hidden">
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-20">
-          <span className="text-brand-gold font-bold uppercase tracking-widest text-xs">Holistic Growth</span>
-          <h2 className="text-4xl md:text-5xl font-serif text-brand-green mt-4">5 Petals of Purpose</h2>
+        <div className="text-center mb-10">
+          <span className="text-brand-gold font-bold uppercase tracking-widest text-sm">Holistic Growth</span>
+          <h2 className="text-5xl md:text-6xl font-serif text-brand-green mt-4">5 Petals of Purpose</h2>
         </div>
 
-        {/* Desktop: Visual Flower Layout */}
-        <div className="hidden lg:flex relative items-center justify-center min-h-[700px]">
-          {/* Central Core */}
-          <motion.div 
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            className="relative w-56 h-56 bg-brand-cream rounded-full flex flex-col items-center justify-center z-10 shadow-xl border-4 border-brand-gold/20"
-          >
-            <div className="text-brand-gold font-bold uppercase tracking-widest text-xs mb-1">Our Core</div>
-            <div className="text-brand-green font-serif font-bold text-4xl">Purpose</div>
-            <div className="absolute inset-0 rounded-full border-2 border-dashed border-brand-gold/30 animate-spin-slow" />
-          </motion.div>
-
-          {/* Radiating Petals */}
-          {petals.map((petal, i) => {
-            const angle = (i * 360) / petals.length;
-            const radius = 280;
-            return (
-              <motion.div
-                key={`petal-${i}`}
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ 
-                  opacity: 1, 
-                  scale: 1,
-                  x: Math.cos((angle - 90) * (Math.PI / 180)) * radius,
-                  y: Math.sin((angle - 90) * (Math.PI / 180)) * radius,
-                }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 + i * 0.1, type: "spring", stiffness: 80 }}
-                className="absolute group"
-              >
-                <div className="relative flex flex-col items-center">
-                  <div className="w-48 h-48 rounded-[4rem] bg-white border border-brand-green/5 flex flex-col items-center justify-center p-6 text-center transition-all duration-500 shadow-lg group-hover:shadow-2xl group-hover:-translate-y-2">
-                    <div className={cn("w-14 h-14 rounded-xl flex items-center justify-center mb-4", petal.color)}>
-                      <petal.icon size={32} />
-                    </div>
-                    <h4 className="text-base font-serif font-bold text-brand-green leading-tight">{petal.title}</h4>
-                  </div>
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-56 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none text-center z-20">
-                    <p className="text-sm text-brand-green/60 leading-relaxed bg-brand-cream/90 backdrop-blur-md p-4 rounded-2xl border border-brand-green/10 shadow-xl">
-                      {petal.desc}
-                    </p>
-                  </div>
+        {/* Desktop: Horizontal Layout */}
+        <div className="hidden lg:grid grid-cols-5 gap-4 relative">
+          {petals.map((petal, i) => (
+            <motion.div
+              key={`petal-${i}`}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 * i }}
+              className="group relative"
+            >
+              <div className="h-full bg-brand-cream/20 rounded-[2rem] p-8 border border-brand-green/5 flex flex-col items-center text-center transition-all duration-500 hover:bg-white hover:shadow-2xl hover:-translate-y-2">
+                <div className={cn("w-20 h-20 rounded-2xl flex items-center justify-center mb-8 shadow-sm transition-transform duration-500 group-hover:scale-110", petal.color, "bg-white")}>
+                  <petal.icon size={36} strokeWidth={1.5} />
                 </div>
-              </motion.div>
-            );
-          })}
+                <h4 className="text-xl font-serif font-bold text-brand-green mb-4 leading-tight min-h-[3.5rem] flex items-center justify-center">{petal.title}</h4>
+                <p className="text-sm text-brand-green/60 leading-relaxed">
+                  {petal.desc}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Mobile: Elegant Vertical Petal Stack */}
@@ -374,20 +350,20 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-brand-green/50 to-brand-green" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16">
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-gold/20 text-brand-gold text-[10px] font-bold uppercase tracking-[0.2em] mb-8 border border-brand-gold/30">
-              <Star size={12} fill="currentColor" /> <span>Top Rated Girls' School in Surat</span>
+            <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-brand-gold/20 text-brand-gold text-xs font-bold uppercase tracking-[0.2em] mb-8 border border-brand-gold/30">
+              <Star size={14} fill="currentColor" /> <span>Top Rated Girls' School in Surat</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-serif text-brand-cream leading-[1.05] mb-8">
+            <h1 className="text-6xl md:text-8xl font-serif text-brand-cream leading-[1.05] mb-8">
               Where <span className="text-brand-gold italic">Faith</span> Meets <span className="underline decoration-brand-gold/50 underline-offset-8">Academic Excellence</span>
             </h1>
-            <p className="text-lg text-brand-cream/80 mb-10 font-light leading-relaxed max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl text-brand-cream/80 mb-10 font-light leading-relaxed max-w-3xl mx-auto">
               Pioneers in teaching Quranic Arabic with word-for-word translation. 
               Providing a nurturing environment for girls to excel in SSC academics 
               and spiritual growth.
@@ -415,23 +391,37 @@ const Hero = () => {
 };
 
 const Stats = () => {
-  const [stats, setStats] = React.useState<any[]>([]);
-  const [loading, setLoading] = React.useState(true);
+  const { data: stats, isLoading, isError, refetch } = useQuery({
+    queryKey: ['stats'],
+    queryFn: fetchStats,
+  });
 
-  React.useEffect(() => {
-    const loadStats = async () => {
-      const data = await fetchStats();
-      setStats(data);
-      setLoading(false);
-    };
-    loadStats();
-  }, []);
-
-  if (loading) return (
-    <div className="bg-brand-cream py-6 md:py-12 border-b border-brand-green/5 flex justify-center">
-      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-brand-gold"></div>
+  if (isLoading) return (
+    <div className="bg-brand-cream py-6 md:py-12 border-b border-brand-green/5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={`stat-skeleton-${i}`} className="flex flex-col items-center space-y-2">
+              <Skeleton className="h-12 w-24" />
+              <Skeleton className="h-4 w-32" />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
+
+  if (isError) return (
+    <div className="bg-brand-cream py-4 border-b border-brand-green/5">
+      <div className="max-w-7xl mx-auto px-4 text-center">
+        <button onClick={() => refetch()} className="text-brand-gold text-xs font-bold uppercase hover:underline">
+          Failed to load stats. Click to retry.
+        </button>
+      </div>
+    </div>
+  );
+
+  if (!stats || stats.length === 0) return null;
 
   return (
     <div className="bg-brand-cream py-6 md:py-12 border-b border-brand-green/5">
@@ -439,8 +429,8 @@ const Stats = () => {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {stats.map((stat, i) => (
             <div key={`stat-${i}`} className="text-center p-2 md:p-0">
-              <div className="text-2xl md:text-4xl font-serif font-bold text-brand-green mb-0.5 md:mb-1">{stat.title || stat.value}</div>
-              <div className="text-[8px] md:text-[10px] uppercase tracking-[0.15em] md:tracking-[0.2em] text-brand-gold font-bold">{stat.subtitle || stat.label}</div>
+              <div className="text-3xl md:text-5xl font-serif font-bold text-brand-green mb-1 md:mb-2">{stat.title || stat.value}</div>
+              <div className="text-[10px] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.2em] text-brand-gold font-bold">{stat.subtitle || stat.label}</div>
             </div>
           ))}
         </div>
@@ -450,59 +440,74 @@ const Stats = () => {
 };
 
 const Programs = () => {
-  const [levels, setLevels] = React.useState<any[]>([]);
-  const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    const loadPrograms = async () => {
+  const { data: levels, isLoading, isError, refetch } = useQuery({
+    queryKey: ['programs'],
+    queryFn: async () => {
       const data = await fetchPrograms();
-      if (data && data.length > 0) {
-        setLevels(data);
-      } else {
-        setLevels([
-          {
-            title: "Early Years",
-            grades: "Nursery - KG",
-            desc: "A nurturing start with a focus on play-based learning and basic Islamic values.",
-            image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80"
-          },
-          {
-            title: "Primary School",
-            grades: "Grade 1 - 5",
-            desc: "Strong academic foundation integrated with Quranic Arabic and word-for-word translation.",
-            image: "https://images.unsplash.com/photo-1577891729319-828d0055523f?auto=format&fit=crop&q=80"
-          },
-          {
-            title: "Middle School",
-            grades: "Grade 6 - 8",
-            desc: "Developing critical thinking and deep spiritual understanding during formative years.",
-            image: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&q=80"
-          },
-          {
-            title: "High School",
-            grades: "Grade 9 - 12",
-            desc: "Excellence in SSC curriculum with a focus on leadership and Islamic identity.",
-            image: "https://images.unsplash.com/photo-1511629091441-ee46146481b6?auto=format&fit=crop&q=80"
-          }
-        ]);
-      }
-      setLoading(false);
-    };
-    loadPrograms();
-  }, []);
+      if (data && data.length > 0) return data;
+      return [
+        {
+          title: "Early Years",
+          grades: "Nursery - KG",
+          desc: "A nurturing start with a focus on play-based learning and basic Islamic values.",
+          image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80"
+        },
+        {
+          title: "Primary School",
+          grades: "Grade 1 - 5",
+          desc: "Strong academic foundation integrated with Quranic Arabic and word-for-word translation.",
+          image: "https://images.unsplash.com/photo-1577891729319-828d0055523f?auto=format&fit=crop&q=80"
+        },
+        {
+          title: "Middle School",
+          grades: "Grade 6 - 8",
+          desc: "Developing critical thinking and deep spiritual understanding during formative years.",
+          image: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&q=80"
+        },
+        {
+          title: "High School",
+          grades: "Grade 9 - 12",
+          desc: "Excellence in SSC curriculum with a focus on leadership and Islamic identity.",
+          image: "https://images.unsplash.com/photo-1511629091441-ee46146481b6?auto=format&fit=crop&q=80"
+        }
+      ];
+    },
+  });
 
-  if (loading) return (
-    <div className="py-24 bg-white flex items-center justify-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+  if (isLoading) return (
+    <div className="py-16 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={`prog-skeleton-${i}`} className="space-y-4">
+              <Skeleton className="aspect-[3/4] w-full rounded-3xl" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  if (isError) return (
+    <div className="py-16 bg-white">
+      <ErrorState onRetry={() => refetch()} />
+    </div>
+  );
+
+  if (!levels || levels.length === 0) return (
+    <div className="py-16 bg-white">
+      <EmptyState title="No Programs Available" message="Our educational programs will be listed here soon." />
     </div>
   );
 
   return (
-    <section className="py-24 bg-white">
+    <section className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <span className="text-brand-gold font-bold uppercase tracking-widest text-xs">Our Programs</span>
-          <h2 className="text-4xl md:text-5xl font-serif text-brand-green mt-4">A Nurturing Journey</h2>
+        <div className="text-center mb-10">
+          <span className="text-brand-gold font-bold uppercase tracking-widest text-sm">Our Programs</span>
+          <h2 className="text-5xl md:text-6xl font-serif text-brand-green mt-4">A Nurturing Journey</h2>
         </div>
 
         {/* Desktop Grid */}
@@ -551,9 +556,9 @@ const Programs = () => {
 
 const Mission = () => {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div className="relative">
             <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
               <img 
@@ -568,14 +573,14 @@ const Mission = () => {
           </div>
           
           <div className="space-y-8">
-            <span className="text-brand-gold font-semibold uppercase tracking-widest text-sm">Our Mission</span>
-            <h2 className="text-4xl md:text-5xl font-serif text-brand-green leading-tight">
+            <span className="text-brand-gold font-semibold uppercase tracking-widest text-base">Our Mission</span>
+            <h2 className="text-5xl md:text-6xl font-serif text-brand-green leading-tight">
               A Visionary Approach to <span className="italic">Islamic Education</span>
             </h2>
-            <p className="text-brand-green/70 leading-relaxed italic text-lg">
+            <p className="text-brand-green/70 leading-relaxed italic text-xl md:text-2xl">
               "يَا أَيُّهَا الَّذِينَ آمَنُوا قُوا أَنْفُسَكُمْ وَأَهْلِيكُمْ نَارًا"
             </p>
-            <p className="text-brand-green/70 leading-relaxed">
+            <p className="text-brand-green/70 leading-relaxed text-lg md:text-xl">
               AL-MU’MINAH GROUP OF SCHOOLS is an Islamic School; born out of the ideology that only worldly academic education is not sufficient for the ultimate success of a believer. Our mission is to provide excellence in both academic and Islamic education, preparing our girls for success in this world and the hereafter.
             </p>
             <div className="pt-4">
@@ -591,44 +596,53 @@ const Mission = () => {
 };
 
 const Management = () => {
-  const [members, setMembers] = React.useState<any[]>([]);
-  const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    const loadManagement = async () => {
+  const { data: members, isLoading, isError, refetch } = useQuery({
+    queryKey: ['management-home'],
+    queryFn: async () => {
       const data = await fetchFaculty();
       if (data && data.length > 0) {
-        // Filter members who have "Yes" in "show on homepage" (case-insensitive)
-        const homeMembers = data.filter(m => 
+        return data.filter(m => 
           m.showOnHomepage?.toLowerCase() === 'yes' || 
           m['Show on Homepage']?.toLowerCase() === 'yes'
         );
-        setMembers(homeMembers);
-      } else {
-        setMembers([
-          { name: "Dr Shehnaz Shaikh", role: "Founder & Director", qualification: "MBBS, MD" },
-          { name: "Shabana Latif Shaikh", role: "Principal", qualification: "B.A, B.Ed" },
-          { name: "Kausar Mohsin Sayed", role: "Management", qualification: "B.Com, B.A.B.Ed" },
-          { name: "Shehnaaz Kazi", role: "Management", qualification: "B.Com, B.A.B.Ed" }
-        ]);
       }
-      setLoading(false);
-    };
-    loadManagement();
-  }, []);
+      return [
+        { name: "Dr Shehnaz Shaikh", role: "Founder & Director", qualification: "MBBS, MD" },
+        { name: "Bushra Meer", role: "Principal", qualification: "B.A, B.Ed" },
+        { name: "Kausar Mohsin Sayed", role: "Management", qualification: "B.Com, B.A.B.Ed" },
+        { name: "Shehnaaz Kazi", role: "Management", qualification: "B.Com, B.A.B.Ed" }
+      ];
+    },
+  });
 
-  if (loading) return (
-    <div className="py-24 bg-brand-cream/50 flex items-center justify-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+  if (isLoading) return (
+    <div className="py-16 bg-brand-cream/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={`mgmt-skeleton-${i}`} className="bg-white p-8 rounded-xl space-y-4">
+              <Skeleton className="w-24 h-24 rounded-full mx-auto" />
+              <Skeleton className="h-6 w-3/4 mx-auto" />
+              <Skeleton className="h-4 w-1/2 mx-auto" />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 
-  if (members.length === 0) return null;
+  if (isError) return (
+    <div className="py-16 bg-brand-cream/50">
+      <ErrorState onRetry={() => refetch()} />
+    </div>
+  );
+
+  if (!members || members.length === 0) return null;
 
   return (
-    <section className="py-24 bg-brand-cream/50">
+    <section className="py-12 bg-brand-cream/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <h2 className="text-4xl font-serif text-brand-green mb-4">Our Management</h2>
           <p className="text-brand-green/60 max-w-2xl mx-auto">Guided by experienced educators and visionaries dedicated to the school's mission.</p>
         </div>
@@ -682,38 +696,61 @@ const Management = () => {
   );
 };
 
-const WhyChooseUs = () => {
-  const reasons = [
-    { title: "Safe Environment", desc: "A girls-only campus that provides a secure and comfortable space for learning and growth." },
-    { title: "Islamic Integration", desc: "Seamlessly blending academic excellence with deep-rooted Islamic values and Quranic studies." },
-    { title: "Expert Faculty", desc: "Dedicated educators who are experts in their fields and passionate about student success." },
-    { title: "Holistic Development", desc: "Focusing on physical, intellectual, and spiritual growth through diverse activities." }
+const SalientFeatures = () => {
+  const features = [
+    { icon: UserCheck, title: "All Ladies Staff", desc: "A safe, comfortable, and nurturing environment for girls." },
+    { icon: MessageSquare, title: "Fluency in English", desc: "Developing confident communication skills for global success." },
+    { icon: Zap, title: "Strong Foundation", desc: "Excellence in Science, Mathematics & Technology." },
+    { icon: Heart, title: "Child-Friendly Islamic Studies", desc: "Developing love for Islam through modern methods." },
+    { icon: BookOpen, title: "Tajweed & Makhraj", desc: "Focus on correct Quranic pronunciation and recitation." },
+    { icon: ShieldCheck, title: "Quran & Sunnah", desc: "Emphasis on understanding core Islamic values and ethics." },
+    { icon: GraduationCap, title: "Karate Classes", desc: "Physical fitness, discipline, and self-defense training." },
+    { icon: Users, title: "Guidance & Counselling", desc: "Continuous support for student well-being and growth." },
+    { icon: Video, title: "24/7 Security", desc: "CCTV surveillance ensuring a safe learning environment." }
   ];
 
   return (
-    <section className="py-24 bg-brand-green text-brand-cream">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-          <div>
-            <span className="text-brand-gold font-bold uppercase tracking-widest text-xs">Why AL-MU'MINAH?</span>
-            <h2 className="text-4xl md:text-5xl font-serif mt-4 mb-8">Why Parents Choose Us Over Other Schools</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              {reasons.map((reason, i) => (
-                <div key={reason.title} className="space-y-3">
-                  <div className="w-10 h-10 bg-brand-gold/20 rounded-lg flex items-center justify-center text-brand-gold">
-                    <CheckCircle size={20} />
-                  </div>
-                  <h4 className="text-xl font-serif text-brand-gold">{reason.title}</h4>
-                  <p className="text-brand-cream/60 text-sm leading-relaxed">{reason.desc}</p>
+    <section className="py-20 bg-brand-green text-brand-cream relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5" />
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-brand-gold/5 via-transparent to-brand-green/20 pointer-events-none" />
+      
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <span className="text-brand-gold font-bold uppercase tracking-widest text-sm mb-4 block">Why Choose Us</span>
+          <h2 className="text-5xl md:text-7xl font-serif mb-6 leading-tight">Salient Features</h2>
+          <p className="text-brand-gold text-xl md:text-2xl font-serif italic max-w-3xl mx-auto opacity-90">
+            Preparing Students for Modern Academic & Professional Excellence
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {features.map((feature, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              className="group relative bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-2xl md:rounded-3xl hover:bg-white/10 hover:border-brand-gold/30 transition-all duration-500 shadow-xl hover:shadow-brand-gold/5"
+            >
+              <div className="flex items-center space-x-5">
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-brand-gold/20 rounded-xl flex items-center justify-center text-brand-gold group-hover:scale-110 transition-transform duration-500 shrink-0">
+                  <feature.icon size={26} className="md:w-7 md:h-7" />
                 </div>
-              ))}
-            </div>
-          </div>
-          <div className="relative">
-            <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl border-8 border-white/10">
-              <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80" alt="Students" className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" />
-            </div>
-            <div className="absolute -top-10 -left-10 w-40 h-40 bg-brand-gold rounded-full flex items-center justify-center text-brand-green font-serif text-2xl font-bold text-center p-4">
+                <div>
+                  <h4 className="text-lg md:text-xl font-serif text-brand-gold mb-1">{feature.title}</h4>
+                  <p className="text-brand-cream/60 text-xs md:text-sm leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">{feature.desc}</p>
+                </div>
+              </div>
+              {/* Subtle glow effect on hover */}
+              <div className="absolute inset-0 rounded-2xl md:rounded-3xl bg-brand-gold/0 group-hover:bg-brand-gold/5 transition-colors pointer-events-none" />
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-20 text-center">
+          <div className="inline-block p-1 rounded-full bg-brand-gold/20 border border-brand-gold/30">
+            <div className="px-8 py-3 rounded-full bg-brand-gold text-brand-green font-bold text-sm uppercase tracking-widest">
               20+ Years of Excellence
             </div>
           </div>
@@ -731,9 +768,9 @@ const Testimonials = () => {
   ];
 
   return (
-    <section className="py-24 bg-brand-cream/30">
+    <section className="py-12 bg-brand-cream/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <span className="text-brand-gold font-bold uppercase tracking-widest text-xs">Parent Reviews</span>
           <h2 className="text-4xl font-serif text-brand-green mt-4">What Our Parents Say</h2>
         </div>
@@ -795,15 +832,15 @@ const News = () => {
   }, []);
 
   if (loading) return (
-    <div className="py-24 bg-white flex items-center justify-center">
+    <div className="py-16 bg-white flex items-center justify-center">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
     </div>
   );
 
   return (
-    <section className="py-24 bg-white">
+    <section className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-end mb-16">
+        <div className="flex justify-between items-end mb-10">
           <div>
             <span className="text-brand-gold font-bold uppercase tracking-widest text-xs">Latest Updates</span>
             <h2 className="text-4xl font-serif text-brand-green mt-4">School News & Events</h2>
@@ -849,7 +886,7 @@ export const Home = () => {
       <PhilosophySHARP />
       <PetalsOfPurpose />
       <Programs />
-      <WhyChooseUs />
+      <SalientFeatures />
       <Mission />
       <Testimonials />
       <Management />

@@ -13,7 +13,7 @@
 
 @layer base {
   body {
-    @apply bg-brand-cream text-brand-green font-sans;
+    @apply bg-brand-cream text-brand-green font-sans text-base md:text-lg;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;

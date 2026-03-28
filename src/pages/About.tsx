@@ -10,53 +10,69 @@ export const About = () => {
       className="py-20"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <span className="text-brand-gold font-semibold uppercase tracking-widest text-sm mb-4 block">About Us</span>
-        <h1 className="text-5xl md:text-6xl font-serif text-brand-green mb-12 leading-tight">
+        <span className="text-brand-gold font-semibold uppercase tracking-widest text-base mb-4 block">About Us</span>
+        <h1 className="text-6xl md:text-7xl font-serif text-brand-green mb-12 leading-tight">
           Pioneering <span className="italic">Islamic Excellence</span> Since Inception
         </h1>
         
-        <div className="prose prose-lg prose-brand-green max-w-none space-y-8 text-brand-green/80 leading-relaxed">
-          <section className="space-y-4">
-            <h2 className="text-3xl font-serif text-brand-green">Our Ideology</h2>
-            <p>
-              AL-MU’MINAH GROUP OF SCHOOLS is an Islamic School; born out of the ideology that only worldly academic education is not sufficient for the ultimate success of a believer. In today’s world, where moral values are rapidly declining, it is imperative to provide an environment that nurtures both the mind and the soul.
-            </p>
-          </section>
-
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-12 py-12 border-y border-brand-green/10 my-12">
-            <div className="space-y-4">
-              <h3 className="text-2xl font-serif text-brand-green">Our Vision</h3>
-              <p className="text-sm">
-                To be a premier educational institution that produces confident, knowledgeable, and spiritually grounded Muslimahs who contribute positively to society while upholding the values of Islam.
+        <div className="prose prose-xl prose-brand-green max-w-none space-y-16 text-brand-green/80 leading-relaxed">
+          <section className="space-y-6">
+            <h2 className="text-4xl font-serif text-brand-green">Our Ideology</h2>
+            <div className="space-y-6 text-lg md:text-xl">
+              <p>
+                Al-Mu'minah School is an Islamic school, founded on the belief that worldly academic education alone is not sufficient for true and lasting success. For a believer, ultimate success lies in success in the Hereafter.
               </p>
-            </div>
-            <div className="space-y-4">
-              <h3 className="text-2xl font-serif text-brand-green">Our Mission</h3>
-              <p className="text-sm">
-                To provide a holistic education that integrates high-quality academic learning with deep Islamic knowledge, specifically focusing on the understanding of the Qur’an through word-for-word translation.
+              <p>
+                Over the past century, a growing divide has emerged between religious education and modern academic education. In reality, both are equally vital and complementary, and together they form the foundation for the holistic development of an individual.
+              </p>
+              <p>
+                At Al-Mu'minah School, we are committed to integrating Islamic (Deeni) education with modern academic learning, enabling our students to excel in both domains.
+              </p>
+              <p>
+                Our aim is to nurture young girls of strong faith, upright character, and high academic calibre - confident, knowledgeable, and capable Muslims who are prepared to contribute positively to society while remaining firmly grounded in Islamic values.
               </p>
             </div>
           </section>
 
-          <section className="space-y-4">
-            <h2 className="text-3xl font-serif text-brand-green">Our Aim</h2>
-            <p>
-              Our primary aim is to produce students who are not only academically brilliant but also spiritually conscious. We strive to create an environment where girls can excel in their studies without compromising their Islamic identity or values.
+          <section className="bg-brand-cream/50 p-12 rounded-3xl border border-brand-gold/20">
+            <h3 className="text-3xl font-serif text-brand-green mb-6">Our Vision</h3>
+            <p className="text-xl md:text-2xl font-serif italic text-brand-green leading-relaxed">
+              "To nurture students who grow into righteous, responsible, and compassionate human beings - guided by the Qur'an and Sunnah, inspired by the character of Prophet Muhammad (PBUH), and committed to justice, honesty, humility, and integrity."
             </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Excellence in Academic and Islamic Education.</li>
-              <li>Mastery of Quranic Arabic and word-for-word translation.</li>
-              <li>Development of strong character and moral values.</li>
-              <li>Preparation for the SSC board examinations with top honors.</li>
-            </ul>
           </section>
 
-          <div className="bg-brand-green text-brand-cream p-10 rounded-2xl mt-16">
-            <h3 className="text-2xl font-serif mb-4 italic text-brand-gold">A Message from the Founder</h3>
-            <p className="font-light italic leading-relaxed">
+          <section className="space-y-10">
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <h2 className="text-4xl font-serif text-brand-green mb-4">The Pathway</h2>
+              <p className="text-brand-green/60">How We Achieve Our Vision</p>
+              <p className="mt-4">We build our educational model on two strong, interconnected pillars:</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-white p-8 rounded-2xl shadow-sm border border-brand-green/5 hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 bg-brand-gold/10 rounded-full flex items-center justify-center text-brand-gold mb-6 font-bold text-xl">1</div>
+                <h4 className="text-2xl font-serif text-brand-green mb-4">A Rigorous Academic Curriculum</h4>
+                <p className="text-base text-brand-green/70 leading-relaxed">
+                  Strong foundation with English as the medium, using proven resources from ICSE, Oxford, and NCERT.
+                </p>
+              </div>
+
+              <div className="bg-white p-8 rounded-2xl shadow-sm border border-brand-green/5 hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 bg-brand-gold/10 rounded-full flex items-center justify-center text-brand-gold mb-6 font-bold text-xl">2</div>
+                <h4 className="text-2xl font-serif text-brand-green mb-4">A Comprehensive Academic Islamic Curriculum</h4>
+                <p className="text-base text-brand-green/70 leading-relaxed">
+                  A deep early immersion in the Quran, Sunnah, Arabic language, and Islamic values.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <div className="bg-brand-green text-brand-cream p-12 rounded-2xl mt-16">
+            <h3 className="text-3xl font-serif mb-6 italic text-brand-gold">A Message from the Founder</h3>
+            <p className="font-light italic leading-relaxed text-xl md:text-2xl">
               "We believe that every girl has the potential to be a beacon of light for her family and community. Our role is to provide the tools—both academic and spiritual—to help her shine."
             </p>
-            <p className="mt-6 font-semibold">— Dr Shehnaz Shaikh, Founder & Director</p>
+            <p className="mt-8 font-semibold text-lg">— Dr Shehnaz Shaikh, Founder & Director</p>
           </div>
         </div>
       </div>

@@ -37,27 +37,27 @@ export const Events = () => {
         {announcements.length > 0 && (
           <section className="mb-20">
             <div className="flex items-center space-x-3 mb-8">
-              <Volume2 className="text-brand-gold" size={24} />
-              <h2 className="text-2xl font-serif text-brand-green">Latest Announcements</h2>
+              <Volume2 className="text-brand-gold" size={28} />
+              <h2 className="text-3xl font-serif text-brand-green">Latest Announcements</h2>
             </div>
-            <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 gap-8">
               {announcements.map((ann, i) => (
                 <motion.div
                   key={`ann-${ann.title}-${i}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
-                  className="bg-brand-green text-brand-cream p-8 rounded-[2rem] shadow-xl relative overflow-hidden group"
+                  className="bg-brand-green text-brand-cream p-10 rounded-[2.5rem] shadow-xl relative overflow-hidden group"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-brand-gold/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150" />
                   <div className="relative z-10">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-2xl font-serif text-brand-gold">{ann.title}</h3>
-                      <span className="text-[10px] uppercase tracking-widest opacity-60 bg-white/10 px-3 py-1 rounded-full">{ann.date}</span>
+                    <div className="flex justify-between items-start mb-6">
+                      <h3 className="text-3xl font-serif text-brand-gold">{ann.title}</h3>
+                      <span className="text-xs uppercase tracking-widest opacity-60 bg-white/10 px-4 py-1.5 rounded-full">{ann.date}</span>
                     </div>
-                    <p className="text-brand-cream/80 leading-relaxed mb-6 max-w-3xl">{ann.content}</p>
-                    <div className="flex items-center space-x-2 text-brand-gold/80 text-xs font-bold uppercase tracking-widest">
-                      <User size={14} />
+                    <p className="text-brand-cream/80 text-lg leading-relaxed mb-8 max-w-4xl">{ann.content}</p>
+                    <div className="flex items-center space-x-2 text-brand-gold/80 text-sm font-bold uppercase tracking-widest">
+                      <User size={16} />
                       <span>From: {ann.author}</span>
                     </div>
                   </div>
@@ -70,8 +70,8 @@ export const Events = () => {
         {/* Events Section */}
         <section>
           <div className="flex items-center space-x-3 mb-12">
-            <Calendar className="text-brand-gold" size={24} />
-            <h2 className="text-3xl font-serif text-brand-green">School Events</h2>
+            <Calendar className="text-brand-gold" size={28} />
+            <h2 className="text-4xl font-serif text-brand-green">School Events</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -93,16 +93,16 @@ export const Events = () => {
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-green/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute top-4 right-4 bg-brand-gold text-brand-green text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">
+                  <div className="absolute top-4 right-4 bg-brand-gold text-brand-green text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
                     {event.date}
                   </div>
                 </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-serif text-brand-green mb-2 group-hover:text-brand-gold transition-colors">{event.title}</h3>
-                  <p className="text-brand-gold text-xs font-bold uppercase tracking-widest mb-4">{event.subtitle}</p>
-                  <p className="text-brand-green/60 text-sm leading-relaxed line-clamp-3">{event.shortDesc}</p>
-                  <div className="mt-6 flex items-center text-brand-green font-bold text-xs uppercase tracking-widest group-hover:translate-x-2 transition-transform">
-                    Read More <ChevronRight size={14} className="ml-1" />
+                <div className="p-10">
+                  <h3 className="text-3xl font-serif text-brand-green mb-3 group-hover:text-brand-gold transition-colors">{event.title}</h3>
+                  <p className="text-brand-gold text-sm font-bold uppercase tracking-widest mb-5">{event.subtitle}</p>
+                  <p className="text-brand-green/60 text-base leading-relaxed line-clamp-3">{event.shortDesc}</p>
+                  <div className="mt-8 flex items-center text-brand-green font-bold text-sm uppercase tracking-widest group-hover:translate-x-2 transition-transform">
+                    Read More <ChevronRight size={16} className="ml-1" />
                   </div>
                 </div>
               </motion.div>

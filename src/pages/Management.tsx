@@ -1,30 +1,52 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Star, Quote, Target, Award, Users } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { Skeleton, ErrorState, EmptyState } from '../components/Feedback';
+import { Star, Quote, Target, Award, Users, GraduationCap } from 'lucide-react';
 import { fetchTrustDetails, fetchFaculty } from '../services/googleSheets';
 
 const Management = () => {
-  const [trust, setTrust] = React.useState<any>(null);
-  const [faculty, setFaculty] = React.useState<any[]>([]);
-  const [loading, setLoading] = React.useState(true);
+  const { data: trust, isLoading: isLoadingTrust } = useQuery({
+    queryKey: ['trust-details'],
+    queryFn: fetchTrustDetails,
+  });
 
-  React.useEffect(() => {
-    const loadData = async () => {
-      const [trustData, facultyData] = await Promise.all([
-        fetchTrustDetails(),
-        fetchFaculty()
-      ]);
-      setTrust(trustData);
-      setFaculty(facultyData);
-      setLoading(false);
-    };
-    loadData();
-  }, []);
+  const { data: faculty, isLoading: isLoadingFaculty, isError, refetch } = useQuery({
+    queryKey: ['faculty'],
+    queryFn: fetchFaculty,
+  });
 
-  if (loading) {
+  if (isLoadingTrust || isLoadingFaculty) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-cream/20">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-gold"></div>
+      <div className="bg-white">
+        {/* Hero Skeleton */}
+        <section className="py-24 bg-brand-green">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <Skeleton className="h-4 w-32 mx-auto mb-4 bg-white/10" />
+            <Skeleton className="h-16 w-3/4 mx-auto mb-8 bg-white/10" />
+            <Skeleton className="h-6 w-1/2 mx-auto bg-white/10" />
+          </div>
+        </section>
+        
+        {/* Content Skeletons */}
+        <div className="max-w-7xl mx-auto px-4 py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+            <div className="space-y-6">
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-12 w-3/4" />
+              <Skeleton className="h-40 w-full" />
+            </div>
+            <Skeleton className="aspect-[4/5] w-full rounded-3xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <ErrorState onRetry={() => refetch()} />
       </div>
     );
   }
@@ -65,10 +87,10 @@ const Management = () => {
         </div>
       </section>
 
-      {/* Trust Details */}
+      {/* Owner and Managing Trustee Section */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -77,22 +99,24 @@ const Management = () => {
             >
               <div className="inline-flex items-center space-x-3 text-brand-gold">
                 <Award size={24} />
-                <span className="font-bold uppercase tracking-widest text-sm">About the Trust</span>
+                <span className="font-bold uppercase tracking-widest text-sm">Owner & Managing Trustee</span>
               </div>
-              <h2 className="text-4xl font-serif text-brand-green leading-tight">
-                Empowering Communities Through <span className="italic">Quality Education</span>
+              <h2 className="text-4xl md:text-5xl font-serif text-brand-green leading-tight">
+                Maulana Arshad Ahmed Meer
               </h2>
-              <div className="text-brand-green/70 space-y-6 leading-relaxed">
-                <p>{trust?.abouttrust || "MEER EDUCATION TRUST is dedicated to providing holistic education that blends academic excellence with strong moral values. Under our umbrella, we run several prestigious institutions including AL-MU'MINAH School Surat, Madni School Surat, and M.A. Meer School."}</p>
-                <div className="bg-brand-cream/30 p-8 rounded-2xl border-l-4 border-brand-gold">
-                  <div className="flex items-center space-x-3 text-brand-gold mb-4">
-                    <Target size={20} />
-                    <span className="font-bold uppercase tracking-widest text-xs">Our Vision</span>
-                  </div>
-                  <p className="text-brand-green italic font-serif text-lg">
-                    "{trust?.vision || "To create an educational ecosystem where every child can achieve their full potential while staying rooted in their cultural and spiritual identity."}"
-                  </p>
-                </div>
+              <div className="text-brand-green/80 space-y-6 text-lg leading-relaxed">
+                <p>
+                  By the grace and mercy of Allah Tabarak wa Ta‘ala, and through the sincere duas of elders, Maulana was inspired by a noble vision: to establish an educational institution where modern, contemporary education could be imparted within a complete Islamic environment. Although many schools existed, Maulana observed that most were deprived of true Islamic values, leading to deep concern and reflection.
+                </p>
+                <p>
+                  Guided by this vision, in 2004, Maulana first established Jamia Faiz-e-Subhani. Taking a step further, in 2007, he founded the first school, Muhammad Ahmed (M.A.) Meer School, integrating Islamic values with modern education. To further strengthen and organize this mission, the Meer Education Trust was established in 2009. Continuing this journey of service to the Ummah, Madni Islamic English Medium School was founded in 2014.
+                </p>
+                <p>
+                  Founded in 2010, Al-Mu’minah English Medium School continues to progress steadily and is now also under the guidance of Maulana Arshad Ahmed Meer, functioning under the same trust. Through his leadership, Al-Mu’minah stands aligned with the broader vision of imparting modern education rooted firmly in Islamic values, discipline, and moral character. In 2016, Maulana was chosen as the President of Jamiat Ulama-I-Hind, Surat, the largest community involved in social work.
+                </p>
+                <p>
+                  Today, all these institutions operate under the banner of the Meer Education Trust, providing quality education to more than 1,800 students in a nurturing Islamic atmosphere. Under Maulana’s guidance and vision, Al-Mu’minah School continues to grow with dedication, discipline, and excellence. Maulana’s heartfelt dua and aspiration is that, Insha Allah, these institutions continue to expand to the Secondary, Higher Secondary, College, and University levels, producing generations strong in both Imaan and knowledge.
+                </p>
               </div>
             </motion.div>
 
@@ -100,19 +124,19 @@ const Management = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="relative"
+              className="relative lg:sticky lg:top-24"
             >
               <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl relative z-10">
                 <img 
                   src={trust?.trusteephoto || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80"} 
-                  alt="Maulana Arshad Meer" 
+                  alt="Maulana Arshad Ahmed Meer" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-green/80 via-transparent to-transparent" />
                 <div className="absolute bottom-8 left-8 right-8 text-white">
-                  <h3 className="text-3xl font-serif mb-1">{trust?.trusteename || "Maulana Arshad Meer"}</h3>
-                  <p className="text-brand-gold font-bold uppercase tracking-widest text-xs">Trustee / Chairman</p>
+                  <h3 className="text-3xl font-serif mb-1">Maulana Arshad Ahmed Meer</h3>
+                  <p className="text-brand-gold font-bold uppercase tracking-widest text-xs">Owner & Managing Trustee</p>
                 </div>
               </div>
               <div className="absolute -top-10 -right-10 w-64 h-64 bg-brand-gold/10 rounded-full -z-10 blur-2xl" />
@@ -122,17 +146,113 @@ const Management = () => {
         </div>
       </section>
 
-      {/* Trustee Message */}
+      {/* Principal Section */}
+      <section className="py-24 bg-brand-green text-brand-cream overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-brand-gold/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="order-2 lg:order-1"
+            >
+              <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl relative border-4 border-brand-gold/20">
+                <img 
+                  src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80" 
+                  alt="Bushra Meer" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-green/90 via-transparent to-transparent" />
+                <div className="absolute bottom-8 left-8 right-8">
+                  <h3 className="text-3xl font-serif text-brand-gold mb-1">Bushra Meer</h3>
+                  <p className="text-brand-cream/70 font-bold uppercase tracking-widest text-xs">Principal, Al-Mu'minah School</p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-8 order-1 lg:order-2"
+            >
+              <div className="inline-flex items-center space-x-3 text-brand-gold">
+                <GraduationCap size={24} />
+                <span className="font-bold uppercase tracking-widest text-sm">Principal's Message</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-serif text-brand-cream leading-tight">
+                Bushra Meer <span className="text-2xl block text-brand-gold mt-2">(B.A, B.Ed)</span>
+              </h2>
+              <div className="text-brand-cream/80 space-y-6 text-lg leading-relaxed">
+                <p>
+                  As the Principal of Al-Mu'minah English Medium School, Bushra Meer brings years of academic expertise and a deep commitment to the holistic development of every student. Her leadership is defined by a passion for excellence and a firm belief in the power of value-based education.
+                </p>
+                <p>
+                  She works tirelessly to ensure that the school's vision—integrating modern academic standards with Islamic principles—is reflected in every classroom. Under her guidance, the school has flourished as a space where discipline, creativity, and spiritual growth go hand in hand.
+                </p>
+                <div className="bg-white/5 p-8 rounded-2xl border-l-4 border-brand-gold backdrop-blur-sm">
+                  <Quote size={32} className="text-brand-gold/30 mb-4" />
+                  <p className="text-brand-cream italic font-serif text-xl">
+                    "Education is not just about academic excellence; it is about nurturing the soul and building a character that reflects the beauty of our faith. At Al-Mu'minah, we strive to empower every student with knowledge that serves them in both worlds."
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Founder Section */}
       <section className="py-24 bg-brand-cream/30">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Quote size={48} className="text-brand-gold/30 mx-auto mb-8" />
-          <h2 className="text-3xl font-serif text-brand-green mb-8">Chairman's Message</h2>
-          <p className="text-xl text-brand-green/70 leading-relaxed italic font-serif">
-            "{trust?.trusteemessage || "Education is the most powerful weapon which you can use to change the world. At MEER EDUCATION TRUST, we strive to provide our students with the tools they need to succeed not just in their careers, but in life as compassionate and responsible human beings."}"
-          </p>
-          <div className="mt-12">
-            <div className="w-20 h-1 bg-brand-gold mx-auto mb-4" />
-            <p className="font-bold text-brand-green uppercase tracking-widest">{trust?.trusteename || "Maulana Arshad Meer"}</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="order-2 lg:order-1"
+            >
+              <div className="aspect-square rounded-full overflow-hidden border-8 border-white shadow-2xl max-w-md mx-auto relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80" 
+                  alt="Dr. Shehnaz Shaikh" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-brand-green/10" />
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-8 order-1 lg:order-2"
+            >
+              <div className="inline-flex items-center space-x-3 text-brand-gold">
+                <Star size={24} />
+                <span className="font-bold uppercase tracking-widest text-sm">Founder</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-serif text-brand-green leading-tight">
+                Dr. Shehnaz Shaikh <span className="text-2xl block text-brand-gold mt-2">(MBBS, MD)</span>
+              </h2>
+              <div className="text-brand-green/80 space-y-6 text-lg leading-relaxed">
+                <p>
+                  The founder of Al-Mu'minah Group of Schools is Dr. Shehnaz Shaikh (MBBS, MD), a dedicated educationist committed to establishing quality Islamic academic schools for girls.
+                </p>
+                <p>
+                  She has compiled a word-for-word English translation of the Qur'an and is a pioneer in teaching this method to children, enabling them to understand the Qur'an deeply while developing strong academic and Islamic foundations.
+                </p>
+                <div className="bg-white p-8 rounded-2xl border-l-4 border-brand-gold shadow-sm">
+                  <Quote size={32} className="text-brand-gold/30 mb-4" />
+                  <p className="text-brand-green italic font-serif text-xl">
+                    "We believe that every girl has the potential to be a beacon of light for her family and community. Our role is to provide the tools—both academic and spiritual—to help her shine."
+                  </p>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -147,31 +267,37 @@ const Management = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {faculty.map((member, i) => (
-              <motion.div
-                key={member.name || i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-brand-green/5 hover:shadow-xl transition-all duration-500"
-              >
-                <div className="aspect-square overflow-hidden relative">
-                  <img 
-                    src={member.image || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80"} 
-                    alt={member.name} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-brand-green/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-                <div className="p-6 text-center">
-                  <h4 className="text-xl font-serif text-brand-green mb-1">{member.name}</h4>
-                  <p className="text-brand-gold text-xs font-bold uppercase tracking-widest mb-2">{member.qualification}</p>
-                  <p className="text-brand-green/40 text-[10px] uppercase tracking-widest">{member.role || "Faculty Member"}</p>
-                </div>
-              </motion.div>
-            ))}
+            {(!faculty || faculty.length === 0) ? (
+              <div className="col-span-full">
+                <EmptyState title="No Faculty Found" message="We are currently updating our faculty list." />
+              </div>
+            ) : (
+              faculty.map((member, i) => (
+                <motion.div
+                  key={member.name || i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-brand-green/5 hover:shadow-xl transition-all duration-500"
+                >
+                  <div className="aspect-square overflow-hidden relative">
+                    <img 
+                      src={member.image || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80"} 
+                      alt={member.name} 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-brand-green/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                  <div className="p-6 text-center">
+                    <h4 className="text-xl font-serif text-brand-green mb-1">{member.name}</h4>
+                    <p className="text-brand-gold text-xs font-bold uppercase tracking-widest mb-2">{member.qualification}</p>
+                    <p className="text-brand-green/40 text-[10px] uppercase tracking-widest">{member.role || "Faculty Member"}</p>
+                  </div>
+                </motion.div>
+              ))
+            )}
           </div>
         </div>
       </section>

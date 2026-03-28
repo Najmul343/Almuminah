@@ -53,13 +53,20 @@ const fetchData = async (tabName: string) => {
       // Using Google Visualization API for reading as it has better CORS support than custom Apps Script Web Apps in browsers
       const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tabName)}&headers=1`;
       const response = await fetch(url, { priority: 'high' });
-      if (!response.ok) throw new Error('Network response was not ok');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       
       const text = await response.text();
       const match = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/);
       if (!match) throw new Error('Invalid JSON response from Google Sheets');
       
       const json = JSON.parse(match[1]);
+      if (json.status === 'error') {
+        throw new Error(json.errors[0].detailed_message || 'Google Sheets API error');
+      }
+      
       const table = json.table;
       
       // Extract column labels (e.g., "url", "caption" or "A", "B")
@@ -108,6 +115,7 @@ const fetchData = async (tabName: string) => {
           return keys.find(k => keywords.some(kw => k.includes(kw)));
         };
 
+        const logoKey = findKey(['logo']);
         const imageKey = findKey(['logo', 'image', 'url', 'images', 'photo', 'picture', 'img', 'src']);
         // Fallback to Column A (index 0) if no image keyword found
         const rawImage = imageKey ? normalized[imageKey] : (obj.image || obj.url || obj[0] || obj['A'] || '');
@@ -122,6 +130,7 @@ const fetchData = async (tabName: string) => {
 
         return { 
           ...obj,
+          logo: fixUrl(logoKey ? normalized[logoKey] : ''),
           image: firstImage,
           url: firstImage,
           images: String(finalImages || ''),
@@ -142,9 +151,8 @@ const fetchData = async (tabName: string) => {
       delete pendingRequests[tabName];
       return data;
     } catch (error) {
-      console.error(`Error fetching ${tabName}:`, error);
       delete pendingRequests[tabName];
-      return null;
+      throw error; // Re-throw to let React Query handle it
     }
   })();
 
@@ -163,8 +171,11 @@ if (typeof window !== 'undefined') {
 }
 
 export const fetchStats = async () => {
-  const data = await fetchData('Stats');
-  if (!data || data.length === 0) {
+  try {
+    const data = await fetchData('Stats');
+    if (!data || data.length === 0) throw new Error('No stats data');
+    return data;
+  } catch (error) {
     return [
       { title: "20+", subtitle: "Years of Excellence" },
       { title: "1000+", subtitle: "Students Enrolled" },
@@ -172,44 +183,52 @@ export const fetchStats = async () => {
       { title: "50+", subtitle: "Islamic Competitions" },
     ];
   }
-  return data;
 };
 
 export const fetchGalleryImages = async () => {
-  const data = await fetchData('Gallery');
-  if (!data || data.length === 0) {
+  try {
+    const data = await fetchData('Gallery');
+    if (!data || data.length === 0) throw new Error('No gallery data');
+    return data;
+  } catch (error) {
     return [
       { url: 'https://images.unsplash.com/photo-1523050853064-85a17f009c5d', caption: 'School Campus' },
       { url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7', caption: 'Science Lab' },
     ];
   }
-  return data;
 };
 
 export const fetchToppers = async () => {
-  const data = await fetchData('Toppers');
-  if (!data || data.length === 0) {
+  try {
+    const data = await fetchData('Toppers');
+    if (!data || data.length === 0) throw new Error('No toppers data');
+    return data;
+  } catch (error) {
     return [
       { name: "Rajlaxmi Kanhe", nickname: "The Photographer", percentage: "96.20%", year: "2025", std: "X", tagline: "Capturing Excellence", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80" },
       { name: "Ojas Dnyaneshwar", nickname: "The Painter", percentage: "96.40%", year: "2025", std: "X", tagline: "Artistic Brilliance", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80" },
     ];
   }
-  return data;
 };
 
 export const fetchAnnouncements = async () => {
-  const data = await fetchData('Announcements');
-  if (!data || data.length === 0) {
+  try {
+    const data = await fetchData('Announcements');
+    if (!data || data.length === 0) throw new Error('No announcements data');
+    return data;
+  } catch (error) {
     return [
       { title: "Admission Open for 2026-27", date: "March 20, 2026", content: "We are pleased to announce that admissions are now open for all grades. Visit our admissions page for more details.", author: "Principal" },
     ];
   }
-  return data;
 };
 
 export const fetchEvents = async () => {
-  const data = await fetchData('Events');
-  if (!data || data.length === 0) {
+  try {
+    const data = await fetchData('Events');
+    if (!data || data.length === 0) throw new Error('No events data');
+    return data;
+  } catch (error) {
     return [
       { 
         title: "Annual Sports Day 2026", 
@@ -221,7 +240,6 @@ export const fetchEvents = async () => {
       },
     ];
   }
-  return data;
 };
 
 export const fetchPrograms = async () => {
@@ -229,9 +247,33 @@ export const fetchPrograms = async () => {
   return data || [];
 };
 
+const mergeRows = (data: any[]) => {
+  if (!data || data.length === 0) return null;
+  return data.reduce((acc: any, curr: any) => {
+    const merged = { ...acc };
+    Object.entries(curr).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== '') {
+        merged[key] = value;
+      }
+    });
+    return merged;
+  }, {});
+};
+
 export const fetchTrustDetails = async () => {
-  const data = await fetchData('Trust');
-  return data && data.length > 0 ? data[0] : null;
+  try {
+    const data = await fetchData('Trust');
+    const merged = mergeRows(data);
+    if (!merged) throw new Error('No trust data');
+    return merged;
+  } catch (error) {
+    return {
+      name: "MEER EDUCATION TRUST",
+      trustee: "Maulana Arshad Ahmed Meer",
+      trusteephoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80",
+      history: "Established in 2009 to provide quality education rooted in Islamic values.",
+    };
+  }
 };
 
 export const fetchFaculty = async () => {
@@ -246,7 +288,7 @@ export const fetchSocialMedia = async () => {
 
 export const fetchContactDetails = async () => {
   const data = await fetchData('Contact');
-  return data && data.length > 0 ? data[0] : null;
+  return mergeRows(data);
 };
 
 export const fetchGlobalSettings = async () => {
@@ -254,12 +296,13 @@ export const fetchGlobalSettings = async () => {
   const trust = await fetchTrustDetails();
   const contact = await fetchContactDetails();
   
-  const primary = (settings && settings.length > 0) ? settings[0] : {};
+  const primary = mergeRows(settings) || {};
   
   return {
     ...contact,
     ...trust,
     ...primary,
+    logo: contact?.logo || primary?.logo || trust?.logo || '',
     brochure: primary.brochure || trust?.brochure || contact?.brochure || '',
     whatsapp: primary.whatsapp || contact?.whatsapp || contact?.primaryphone || '',
   };
