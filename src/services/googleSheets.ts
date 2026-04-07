@@ -287,8 +287,19 @@ export const fetchSocialMedia = async () => {
 };
 
 export const fetchContactDetails = async () => {
-  const data = await fetchData('Contact');
-  return mergeRows(data);
+  try {
+    const data = await fetchData('Contact');
+    const merged = mergeRows(data);
+    if (!merged) throw new Error('No contact data');
+    return merged;
+  } catch (error) {
+    return {
+      primaryphone: "+91-261-2345678",
+      email: "almuminah_school@yahoo.com",
+      address: "Surat, Gujarat – 395003",
+      logo: 'https://lh3.googleusercontent.com/d/1xGnhNgSHR-JE7uAXM5xvsPX4bYB1uNBXwYBLtVoYgIo'
+    };
+  }
 };
 
 export const fetchGlobalSettings = async () => {
@@ -298,11 +309,13 @@ export const fetchGlobalSettings = async () => {
   
   const primary = mergeRows(settings) || {};
   
+  const defaultLogo = 'https://lh3.googleusercontent.com/d/1xGnhNgSHR-JE7uAXM5xvsPX4bYB1uNBXwYBLtVoYgIo'; // Replace with a real default if needed, or use a placeholder
+
   return {
     ...contact,
     ...trust,
     ...primary,
-    logo: contact?.logo || primary?.logo || trust?.logo || '',
+    logo: contact?.logo || primary?.logo || trust?.logo || defaultLogo,
     brochure: primary.brochure || trust?.brochure || contact?.brochure || '',
     whatsapp: primary.whatsapp || contact?.whatsapp || contact?.primaryphone || '',
   };

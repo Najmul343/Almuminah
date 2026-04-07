@@ -2,24 +2,16 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, Phone, Mail, MapPin, Instagram, Facebook, Youtube, FileText, Twitter, Linkedin, ChevronUp, ChevronDown } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import { cn } from './lib/utils';
 import { fetchSocialMedia, fetchContactDetails, fetchGlobalSettings, prefetchData } from './services/googleSheets';
 
 // Start pre-fetching immediately
 prefetchData();
 
-const Navbar = ({ brochure, logo }: { brochure: string; logo: string }) => {
+const Navbar = ({ brochure, logo, contact }: { brochure: string; logo: string; contact: any }) => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [contact, setContact] = React.useState<any>(null);
   const location = useLocation();
-
-  React.useEffect(() => {
-    const loadData = async () => {
-      const contactData = await fetchContactDetails();
-      setContact(contactData);
-    };
-    loadData();
-  }, []);
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -58,12 +50,16 @@ const Navbar = ({ brochure, logo }: { brochure: string; logo: string }) => {
         <div className="flex justify-between h-24 md:h-32 items-center">
           <Link to="/" className="flex items-center space-x-4 md:space-x-6 shrink-0 mr-4 md:mr-8">
             <div className="w-14 h-14 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center text-brand-green font-georgia text-xl md:text-3xl font-bold border-2 border-brand-gold overflow-hidden shrink-0 shadow-sm">
-              <img 
-                src="https://lh3.googleusercontent.com/d/1v-Y_7_T_X_X_X_X_X_X_X_X_X_X_X_X" 
-                alt="School Logo" 
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
+              {logo || contact?.logo || contact?.image ? (
+                <img 
+                  src={logo || contact?.logo || contact?.image} 
+                  alt="School Logo" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                "M"
+              )}
             </div>
             <div className="flex flex-col w-fit">
               <span className="text-lg md:text-3xl font-georgia font-bold tracking-tight text-brand-green leading-none whitespace-nowrap">
@@ -112,26 +108,9 @@ const Navbar = ({ brochure, logo }: { brochure: string; logo: string }) => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center space-x-1 sm:space-x-2">
-            <a href={`tel:${contact?.primaryphone || '+912612345678'}`} className="p-1.5 sm:p-2 text-brand-green bg-brand-gold/10 rounded-full">
-              <Phone size={18} className="sm:w-5 sm:h-5" />
-            </a>
-            {brochure ? (
-              <a 
-                href={brochure} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-brand-green text-brand-cream text-[9px] sm:text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center"
-              >
-                <FileText size={12} className="mr-1" /> Brochure
-              </a>
-            ) : (
-              <Link to="/admissions" className="px-3 sm:px-4 py-1.5 sm:py-2 bg-brand-green text-brand-cream text-[9px] sm:text-[10px] font-bold uppercase tracking-widest rounded-full">
-                Apply
-              </Link>
-            )}
-            <button onClick={() => setIsOpen(!isOpen)} className="text-brand-green p-1.5 sm:p-2">
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+          <div className="lg:hidden flex items-center">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-brand-green p-2 hover:bg-brand-gold/10 rounded-full transition-colors">
+              {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
         </div>
@@ -144,7 +123,7 @@ const Navbar = ({ brochure, logo }: { brochure: string; logo: string }) => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-brand-cream border-b border-brand-green/10 overflow-hidden"
+            className="lg:hidden bg-brand-cream border-b border-brand-green/10 overflow-y-auto max-h-[calc(100vh-120px)]"
           >
             <div className="px-4 pt-2 pb-6 space-y-4">
               {navLinks.map((link) => (
@@ -182,22 +161,7 @@ const Navbar = ({ brochure, logo }: { brochure: string; logo: string }) => {
   );
 };
 
-const Footer = ({ logo }: { logo: string }) => {
-  const [socials, setSocials] = React.useState<any[]>([]);
-  const [contact, setContact] = React.useState<any>(null);
-
-  React.useEffect(() => {
-    const loadData = async () => {
-      const [socialData, contactData] = await Promise.all([
-        fetchSocialMedia(),
-        fetchContactDetails()
-      ]);
-      setSocials(socialData);
-      setContact(contactData);
-    };
-    loadData();
-  }, []);
-
+const Footer = ({ logo, socials, contact }: { logo: string; socials: any[]; contact: any }) => {
   const getIcon = (name: string) => {
     const n = name.toLowerCase();
     if (n.includes('instagram')) return <Instagram size={20} />;
@@ -215,12 +179,16 @@ const Footer = ({ logo }: { logo: string }) => {
           <div className="lg:col-span-2 space-y-8">
             <div className="flex items-center space-x-6 mb-8">
               <div className="w-20 h-20 md:w-32 md:h-32 bg-white rounded-full flex items-center justify-center text-brand-green font-georgia text-3xl md:text-4xl font-bold border-2 border-brand-gold overflow-hidden shrink-0 shadow-lg shadow-black/20">
-                <img 
-                  src="https://lh3.googleusercontent.com/d/1v-Y_7_T_X_X_X_X_X_X_X_X_X_X_X_X" 
-                  alt="School Logo" 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
+                {logo || contact?.logo || contact?.image ? (
+                  <img 
+                    src={logo || contact?.logo || contact?.image} 
+                    alt="School Logo" 
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  "M"
+                )}
               </div>
               <div className="flex flex-col w-fit">
                 <span className="text-xl md:text-4xl font-georgia font-bold tracking-tight leading-none text-brand-cream whitespace-nowrap">
@@ -392,27 +360,32 @@ const ScrollNavigation = ({ whatsapp }: { whatsapp: string }) => {
 };
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
-  const [brochure, setBrochure] = React.useState('');
-  const [whatsapp, setWhatsapp] = React.useState('');
-  const [logo, setLogo] = React.useState('');
+  const { data: settings } = useQuery({
+    queryKey: ['globalSettings'],
+    queryFn: fetchGlobalSettings,
+    staleTime: 10 * 60 * 1000, // 10 minutes
+  });
 
-  React.useEffect(() => {
-    const loadSettings = async () => {
-      const settings = await fetchGlobalSettings();
-      if (settings?.brochure) setBrochure(settings.brochure);
-      if (settings?.logo) setLogo(settings.logo);
-      if (settings?.whatsapp) {
-        const cleanNumber = settings.whatsapp.toString().replace(/\D/g, '');
-        setWhatsapp(cleanNumber);
-      }
-    };
-    loadSettings();
-  }, []);
+  const { data: contact } = useQuery({
+    queryKey: ['contactDetails'],
+    queryFn: fetchContactDetails,
+    staleTime: 10 * 60 * 1000,
+  });
+
+  const { data: socials } = useQuery({
+    queryKey: ['socialMedia'],
+    queryFn: fetchSocialMedia,
+    staleTime: 10 * 60 * 1000,
+  });
+
+  const logo = settings?.logo || contact?.logo || '';
+  const brochure = settings?.brochure || '';
+  const whatsapp = settings?.whatsapp ? settings.whatsapp.toString().replace(/\D/g, '') : '';
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <ScrollToTop />
-      <Navbar brochure={brochure} logo={logo} />
+      <Navbar brochure={brochure} logo={logo} contact={contact} />
       <main className="flex-grow pt-28 md:pt-32">
         {children}
       </main>
@@ -448,7 +421,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
         </a>
       </div>
 
-      <Footer logo={logo} />
+      <Footer logo={logo} socials={socials || []} contact={contact} />
     </div>
   );
 };
