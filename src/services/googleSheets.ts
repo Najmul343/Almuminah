@@ -12,6 +12,24 @@ const cache: { [key: string]: { data: any; timestamp: number } } = {};
 const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
 const pendingRequests: { [key: string]: Promise<any> } = {};
 
+// Persistent Cache Helpers
+const getPersistentCache = (key: string) => {
+  try {
+    const saved = localStorage.getItem(`school_cache_${key}`);
+    return saved ? JSON.parse(saved) : null;
+  } catch (e) {
+    return null;
+  }
+};
+
+const setPersistentCache = (key: string, data: any) => {
+  try {
+    localStorage.setItem(`school_cache_${key}`, JSON.stringify(data));
+  } catch (e) {
+    // Ignore storage errors (e.g. quota exceeded)
+  }
+};
+
 export const submitInquiry = async (data: any) => {
   try {
     const formData = new URLSearchParams();
@@ -37,18 +55,23 @@ export const submitInquiry = async (data: any) => {
 };
 
 const fetchData = async (tabName: string) => {
-  // Check cache first
   const now = Date.now();
+  
+  // 1. Check In-Memory Cache (Fastest)
   if (cache[tabName] && (now - cache[tabName].timestamp < CACHE_DURATION)) {
     return cache[tabName].data;
   }
 
-  // If there's already a pending request for this tab, return it
+  // 2. Check Pending Requests (Prevents duplicate fetches)
   if (pendingRequests[tabName]) {
     return pendingRequests[tabName];
   }
 
-  pendingRequests[tabName] = (async () => {
+  // 3. Check Persistent Cache (Instant Load for new sessions)
+  const persistentData = getPersistentCache(tabName);
+  
+  // Create the fetch promise
+  const fetchPromise = (async () => {
     try {
       // Using Google Visualization API for reading as it has better CORS support than custom Apps Script Web Apps in browsers
       const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tabName)}&headers=1`;
@@ -146,17 +169,29 @@ const fetchData = async (tabName: string) => {
         };
       }).filter((item: any) => Object.values(item).some(v => v !== null && v !== ''));
 
-      // Store in cache
+      // Update Caches
       cache[tabName] = { data, timestamp: now };
-      delete pendingRequests[tabName];
+      setPersistentCache(tabName, data);
+      
       return data;
     } catch (error) {
+      throw error;
+    } finally {
       delete pendingRequests[tabName];
-      throw error; // Re-throw to let React Query handle it
     }
   })();
 
-  return pendingRequests[tabName];
+  // 4. Stale-While-Revalidate Logic
+  if (persistentData) {
+    // If we have persistent data, return it immediately
+    // The fetchPromise will continue in the background to update the cache for next time
+    pendingRequests[tabName] = fetchPromise; 
+    return persistentData;
+  }
+
+  // If no persistent data, wait for the fetch
+  pendingRequests[tabName] = fetchPromise;
+  return fetchPromise;
 };
 
 // Pre-fetch common tabs in parallel
