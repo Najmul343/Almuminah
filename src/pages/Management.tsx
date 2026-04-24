@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { SEO } from '../components/SEO';
 import { Skeleton, ErrorState, EmptyState } from '../components/Feedback';
 import { Star, Quote, Target, Award, Users, GraduationCap } from 'lucide-react';
-import { fetchTrustDetails, fetchFaculty } from '../services/googleSheets';
+import { fetchTrustDetails, fetchFaculty, fetchPrincipalDetails, fixUrl } from '../services/googleSheets';
 
 const Management = () => {
   const { data: trust, isLoading: isLoadingTrust } = useQuery({
@@ -12,12 +12,17 @@ const Management = () => {
     queryFn: fetchTrustDetails,
   });
 
+  const { data: principal, isLoading: isLoadingPrincipal } = useQuery({
+    queryKey: ['principal-details'],
+    queryFn: fetchPrincipalDetails,
+  });
+
   const { data: faculty, isLoading: isLoadingFaculty, isError, refetch } = useQuery({
     queryKey: ['faculty'],
     queryFn: fetchFaculty,
   });
 
-  if (isLoadingTrust || isLoadingFaculty) {
+  if (isLoadingTrust || isLoadingFaculty || isLoadingPrincipal) {
     return (
       <div className="bg-white">
         {/* Hero Skeleton */}
@@ -138,6 +143,10 @@ const Management = () => {
                   alt="Maulana Arshad Ahmed Meer" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80";
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-green/80 via-transparent to-transparent" />
                 <div className="absolute bottom-8 left-8 right-8 text-white">
@@ -165,14 +174,19 @@ const Management = () => {
             >
               <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl relative border-4 border-brand-gold/20">
                 <img 
-                  src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80" 
-                  alt="Bushra Meer" 
+                  src={principal?.image} 
+                  alt={principal?.name} 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
+                  loading="lazy"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80";
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-green/90 via-transparent to-transparent" />
                 <div className="absolute bottom-8 left-8 right-8">
-                  <h3 className="text-3xl font-serif text-brand-gold mb-1">Bushra Meer</h3>
+                  <h3 className="text-3xl font-serif text-brand-gold mb-1">{principal?.name}</h3>
                   <p className="text-brand-cream/70 font-bold uppercase tracking-widest text-xs">Principal, Al-Mu'minah School</p>
                 </div>
               </div>
@@ -189,19 +203,16 @@ const Management = () => {
                 <span className="font-bold uppercase tracking-widest text-sm">Principal's Message</span>
               </div>
               <h2 className="text-4xl md:text-5xl font-serif text-brand-cream leading-tight">
-                Bushra Meer <span className="text-2xl block text-brand-gold mt-2">(B.A, B.Ed)</span>
+                {principal?.name} <span className="text-2xl block text-brand-gold mt-2">({principal?.qualification})</span>
               </h2>
               <div className="text-brand-cream/80 space-y-6 text-lg leading-relaxed">
                 <p>
-                  As the Principal of Al-Mu'minah English Medium School, Bushra Meer brings years of academic expertise and a deep commitment to the holistic development of every student. Her leadership is defined by a passion for excellence and a firm belief in the power of value-based education.
-                </p>
-                <p>
-                  She works tirelessly to ensure that the school's vision—integrating modern academic standards with Islamic principles—is reflected in every classroom. Under her guidance, the school has flourished as a space where discipline, creativity, and spiritual growth go hand in hand.
+                  {principal?.description}
                 </p>
                 <div className="bg-white/5 p-8 rounded-2xl border-l-4 border-brand-gold backdrop-blur-sm">
                   <Quote size={32} className="text-brand-gold/30 mb-4" />
                   <p className="text-brand-cream italic font-serif text-xl">
-                    "Education is not just about academic excellence; it is about nurturing the soul and building a character that reflects the beauty of our faith. At Al-Mu'minah, we strive to empower every student with knowledge that serves them in both worlds."
+                    "{principal?.quote}"
                   </p>
                 </div>
               </div>
@@ -213,32 +224,15 @@ const Management = () => {
       {/* Founder Section */}
       <section className="py-24 bg-brand-cream/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="max-w-3xl mx-auto text-center">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="order-2 lg:order-1"
+              className="space-y-8"
             >
-              <div className="aspect-square rounded-full overflow-hidden border-8 border-white shadow-2xl max-w-md mx-auto relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80" 
-                  alt="Dr. Shehnaz Shaikh" 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-brand-green/10" />
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="space-y-8 order-1 lg:order-2"
-            >
-              <div className="inline-flex items-center space-x-3 text-brand-gold">
-                <Star size={24} />
+              <div className="flex flex-col items-center space-y-3 text-brand-gold">
+                <Star size={32} />
                 <span className="font-bold uppercase tracking-widest text-sm">Founder</span>
               </div>
               <h2 className="text-4xl md:text-5xl font-serif text-brand-green leading-tight">
@@ -251,9 +245,10 @@ const Management = () => {
                 <p>
                   She has compiled a word-for-word English translation of the Qur'an and is a pioneer in teaching this method to children, enabling them to understand the Qur'an deeply while developing strong academic and Islamic foundations.
                 </p>
-                <div className="bg-white p-8 rounded-2xl border-l-4 border-brand-gold shadow-sm">
-                  <Quote size={32} className="text-brand-gold/30 mb-4" />
-                  <p className="text-brand-green italic font-serif text-xl">
+                <div className="bg-white p-10 md:p-14 rounded-[2.5rem] border-t-8 border-brand-gold shadow-xl relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-brand-gold/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+                  <Quote size={48} className="text-brand-gold/20 mx-auto mb-6" />
+                  <p className="text-brand-green italic font-serif text-2xl md:text-3xl leading-relaxed relative z-10">
                     "We believe that every girl has the potential to be a beacon of light for her family and community. Our role is to provide the tools—both academic and spiritual—to help her shine."
                   </p>
                 </div>
@@ -289,10 +284,14 @@ const Management = () => {
                 >
                   <div className="aspect-square overflow-hidden relative">
                     <img 
-                      src={member.image || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80"} 
+                      src={member.image ? fixUrl(member.image) : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80"} 
                       alt={member.name} 
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80";
+                      }}
                     />
                     <div className="absolute inset-0 bg-brand-green/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>

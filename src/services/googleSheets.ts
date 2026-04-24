@@ -54,6 +54,30 @@ export const submitInquiry = async (data: any) => {
   }
 };
 
+// Helper to fix Google Drive links and ensure they are direct image links
+export const fixUrl = (url: any): string => {
+  if (!url || typeof url !== 'string') return url || '';
+  
+  const urls = url.split(',').map(u => u.trim()).filter(Boolean);
+  const fixedUrls = urls.map(u => {
+    // Handle Google Drive links
+    if (u.includes('drive.google.com')) {
+      // Improved regex to handle various drive link formats
+      const idMatch = u.match(/\/d\/([a-zA-Z0-9_-]{25,})\//) || 
+                      u.match(/id=([a-zA-Z0-9_-]{25,})/) ||
+                      u.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
+      
+      if (idMatch && idMatch[1]) {
+        // Direct link format that works most reliably in most contexts
+        return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
+      }
+    }
+    return u;
+  });
+  
+  return fixedUrls.join(',');
+};
+
 const fetchData = async (tabName: string) => {
   const now = Date.now();
   
@@ -93,81 +117,61 @@ const fetchData = async (tabName: string) => {
       const table = json.table;
       
       // Extract column labels (e.g., "url", "caption" or "A", "B")
-      const cols = table.cols.map((col: any) => col.label || col.id);
+      const cols = table.cols.map((col: any) => (col.label || col.id).toLowerCase().replace(/\s+/g, ''));
       
       let rows = table.rows;
 
       // Map rows to objects
       const data = rows.map((row: any) => {
         const obj: any = {};
+        if (!row || !row.c) return obj;
+
         row.c.forEach((cell: any, i: number) => {
           if (cols[i]) {
             const value = cell ? (cell.v !== null ? cell.v : null) : null;
             obj[cols[i]] = value;
-            // Also store by index (0, 1, 2) and letter (A, B, C) as fallbacks
+            // Also store by index
             obj[i] = value;
-            const letter = String.fromCharCode(65 + i); // 0 -> A, 1 -> B
-            obj[letter] = value;
-          }
-        });
-        
-        const normalized: any = {};
-        Object.keys(obj).forEach(key => {
-          if (typeof key === 'string') {
-            normalized[key.toLowerCase().replace(/\s+/g, '')] = obj[key];
           }
         });
 
-        const fixUrl = (url: any) => {
-          if (!url || typeof url !== 'string') return url;
-          const urls = url.split(',').map(u => u.trim());
-          const fixedUrls = urls.map(u => {
-            if (u.includes('drive.google.com')) {
-              const idMatch = u.match(/\/d\/(.+?)\//) || u.match(/id=(.+?)(&|$)/);
-              if (idMatch && idMatch[1]) return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
-            }
-            return u;
-          });
-          return fixedUrls.join(',');
-        };
+        // Specialized Image Fixing for any column that might contain a URL
+        Object.keys(obj).forEach(key => {
+          const val = obj[key];
+          if (typeof val === 'string' && (key.includes('image') || key.includes('photo') || key.includes('url') || key.includes('picture') || val.startsWith('http'))) {
+            obj[key] = fixUrl(val);
+          }
+        });
 
         const findKey = (keywords: string[]) => {
-          const keys = Object.keys(normalized).filter(k => normalized[k] !== null && normalized[k] !== '');
-          const exactMatch = keys.find(k => keywords.includes(k));
-          if (exactMatch) return exactMatch;
-          return keys.find(k => keywords.some(kw => k.includes(kw)));
+          const keys = Object.keys(obj).filter(k => isNaN(Number(k)));
+          return keys.find(k => keywords.some(kw => String(k).includes(kw)));
         };
 
         const logoKey = findKey(['logo']);
-        const imageKey = findKey(['logo', 'image', 'url', 'images', 'photo', 'picture', 'img', 'src']);
-        // Fallback to Column A (index 0) if no image keyword found
-        const rawImage = imageKey ? normalized[imageKey] : (obj.image || obj.url || obj[0] || obj['A'] || '');
-        const finalImages = fixUrl(rawImage);
-        const firstImage = (finalImages || '').split(',')[0].trim();
+        const imageKey = findKey(['image', 'url', 'photo', 'picture', 'img', 'src']);
+        const finalImages = (logoKey && obj[logoKey]) || (imageKey && obj[imageKey]) || obj[0] || '';
+        const firstImage = (String(finalImages) || '').split(',')[0].trim();
 
         const captionKey = findKey(['caption', 'desc', 'text', 'info']);
         const titleKey = findKey(['title', 'name', 'heading']);
         const dateKey = findKey(['date', 'time', 'year', 'academic']);
-        const whatsappKey = findKey(['whatsapp', 'wa', 'phone', 'mobile', 'contact', 'primaryphone']);
+        const whatsappKey = findKey(['whatsapp', 'wa', 'phone', 'mobile', 'contact']);
         const brochureKey = findKey(['brochure', 'pdf', 'link', 'download']);
         const stdKey = findKey(['std', 'standard', 'class', 'grade', 'level']);
 
         return { 
           ...obj,
-          logo: fixUrl(logoKey ? normalized[logoKey] : ''),
+          logo: fixUrl((logoKey ? obj[logoKey] : null) || obj.logo || ''),
           image: firstImage,
           url: firstImage,
           images: String(finalImages || ''),
-          caption: obj.caption || (captionKey ? normalized[captionKey] : '') || (obj[1] || obj['B'] || ''),
-          title: obj.title || (titleKey ? normalized[titleKey] : '') || (obj[0] || obj['A'] || ''),
-          std: obj.std || (stdKey ? normalized[stdKey] : '') || (obj[1] || obj['B'] || ''),
-          subtitle: obj.subtitle || normalized.subtitle || '',
-          date: obj.date || (dateKey ? normalized[dateKey] : '') || (obj[3] || obj['D'] || ''),
-          content: obj.content || normalized.content || normalized.description || (captionKey ? normalized[captionKey] : '') || '',
-          shortDesc: obj.shortDesc || normalized.shortdesc || normalized.description || (captionKey ? normalized[captionKey] : '') || '',
-          fullDesc: obj.fullDesc || normalized.fulldesc || (captionKey ? normalized[captionKey] : '') || '',
-          whatsapp: obj.whatsapp || (whatsappKey ? normalized[whatsappKey] : '') || '',
-          brochure: obj.brochure || (brochureKey ? normalized[brochureKey] : '') || '',
+          caption: obj.caption || (captionKey ? obj[captionKey] : '') || (obj[1] || ''),
+          title: obj.title || (titleKey ? obj[titleKey] : '') || (obj[0] || ''),
+          std: obj.std || (stdKey ? obj[stdKey] : '') || (obj[1] || ''),
+          date: obj.date || (dateKey ? obj[dateKey] : '') || (obj[3] || ''),
+          whatsapp: obj.whatsapp || (whatsappKey ? obj[whatsappKey] : '') || '',
+          brochure: obj.brochure || (brochureKey ? obj[brochureKey] : '') || '',
         };
       }).filter((item: any) => Object.values(item).some(v => v !== null && v !== ''));
 
@@ -302,6 +306,11 @@ export const fetchTrustDetails = async () => {
     const data = await fetchData('Trust');
     const merged = mergeRows(data);
     if (!merged) throw new Error('No trust data');
+    
+    // Safety fix for any remaining drive links
+    if (merged.trusteephoto) merged.trusteephoto = fixUrl(merged.trusteephoto);
+    if (merged.logo) merged.logo = fixUrl(merged.logo);
+    
     return merged;
   } catch (error) {
     return {
@@ -321,6 +330,77 @@ export const fetchFaculty = async () => {
 export const fetchSocialMedia = async () => {
   const data = await fetchData('SocialMedia');
   return data || [];
+};
+
+export const fetchPrincipalDetails = async () => {
+  try {
+    const data = await fetchData('Principal');
+    const merged = mergeRows(data);
+    if (!merged) throw new Error('No principal data');
+    
+    // Normalize data and ensure URLs are fixed
+    const rawImage = merged.image || merged.principalphoto || merged.url || "";
+    const name = merged.name || merged.principalname || "Bushra Meer";
+    
+    return {
+      name,
+      qualification: merged.qualification || merged.eduqualification || "B.A, B.Ed",
+      image: fixUrl(rawImage) || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80",
+      description: merged.description || merged.about || "As the Principal of Al-Mu'minah English Medium School, she brings years of academic expertise and a deep commitment to the holistic development of every student.",
+      quote: merged.quote || merged.message || "Education is not just about academic excellence; it is about nurturing the soul and building a character that reflects the beauty of our faith."
+    };
+  } catch (error) {
+    return {
+      name: "Bushra Meer",
+      qualification: "B.A, B.Ed",
+      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80",
+      description: "As the Principal of Al-Mu'minah English Medium School, Bushra Meer brings years of academic expertise and a deep commitment to the holistic development of every student. Her leadership is defined by a passion for excellence and a firm belief in the power of value-based education.",
+      quote: "Education is not just about academic excellence; it is about nurturing the soul and building a character that reflects the beauty of our faith. At Al-Mu'minah, we strive to empower every student with knowledge that serves them in both worlds."
+    };
+  }
+};
+
+export const fetchBlogs = async () => {
+  const data = await fetchData('Blogs');
+  if (!data || data.length === 0) return [];
+
+  // Each row is a blog post
+  return data.map((row: any, idx: number) => {
+    // Normalize keys to lowercase for easier access
+    const normalizedRow: any = {};
+    Object.keys(row).forEach(key => {
+      normalizedRow[key.toLowerCase().replace(/\s+/g, '')] = row[key];
+    });
+
+    // Handle multiple image columns (any keys not matching standard text fields)
+    const standardKeys = ['title', 'subtitle', 'shortdescription', 'quote', 'blogcontent'];
+    const images: string[] = [];
+    
+    // Check all keys for potential image URLs
+    Object.keys(normalizedRow).forEach(key => {
+      const val = normalizedRow[key];
+      if (!standardKeys.includes(key) && val && typeof val === 'string' && (val.trim().startsWith('http') || key.includes('image') || key.includes('photo'))) {
+        const fixed = fixUrl(val.trim());
+        fixed.split(',').forEach(img => {
+          if (img.trim()) images.push(img.trim());
+        });
+      }
+    });
+
+    const uniqueImages = [...new Set(images)];
+
+    return {
+      id: idx.toString(),
+      title: normalizedRow.title || "Untitled Blog",
+      subtitle: normalizedRow.subtitle || "",
+      shortDescription: normalizedRow.shortdescription || normalizedRow.shortdesc || "",
+      quote: normalizedRow.quote || "",
+      content: normalizedRow.blogcontent || normalizedRow.content || "",
+      images: uniqueImages,
+      mainImage: uniqueImages[0] || "https://images.unsplash.com/photo-1454165833767-027ffea9e77b?auto=format&fit=crop&q=80",
+      date: normalizedRow.date || new Date().toLocaleDateString()
+    };
+  });
 };
 
 export const fetchContactDetails = async () => {

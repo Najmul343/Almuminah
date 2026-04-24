@@ -6,7 +6,7 @@ import { SEO } from '../components/SEO';
 import { ArrowRight, BookOpen, GraduationCap, Heart, Star, CheckCircle, ChevronLeft, ChevronRight, Send, Camera, Palette, Shield, Zap, Cpu, FileText, UserCheck, Video, ShieldCheck, Users, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
-import { submitInquiry, fetchToppers, fetchEvents, fetchPrograms, fetchFaculty, fetchGlobalSettings, fetchStats } from '../services/googleSheets';
+import { submitInquiry, fetchToppers, fetchEvents, fetchPrograms, fetchFaculty, fetchGlobalSettings, fetchStats, fixUrl } from '../services/googleSheets';
 
 const TopperCarousel = () => {
   const [toppers, setToppers] = React.useState<any[]>([]);
@@ -92,11 +92,15 @@ const TopperCarousel = () => {
                 >
                   <div className="aspect-[4/5] rounded-xl overflow-hidden relative">
                     <img 
-                      src={topper.image || 'https://images.unsplash.com/photo-1523050853064-85a17f009c5d'} 
+                      src={topper.image ? fixUrl(topper.image) : 'https://images.unsplash.com/photo-1523050853064-85a17f009c5d'} 
                       alt={topper.name} 
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                       referrerPolicy="no-referrer" 
                       loading="lazy"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "https://images.unsplash.com/photo-1523050853064-85a17f009c5d";
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                     <div className="absolute bottom-3 left-3 text-white">
@@ -563,7 +567,17 @@ const Programs = () => {
               className="group cursor-pointer w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(25%-1.5rem)] max-w-sm"
             >
               <div className="aspect-[3/4] rounded-3xl overflow-hidden relative mb-6 shadow-lg">
-                <img src={level.image} alt={level.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" loading="lazy" />
+                <img 
+                  src={level.image ? fixUrl(level.image) : "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80"} 
+                  alt={level.title} 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                  referrerPolicy="no-referrer" 
+                  loading="lazy" 
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80";
+                  }}
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-green via-transparent to-transparent opacity-60" />
                 <div className="absolute bottom-6 left-6 right-6">
                   <div className="text-brand-gold text-[10px] font-bold uppercase tracking-widest mb-1">{level.grades || level.subtitle}</div>
@@ -581,7 +595,17 @@ const Programs = () => {
             {levels.map((level, i) => (
               <div key={`mob-program-${i}`} className="min-w-[85%] snap-center">
                 <div className="aspect-[3/4] rounded-3xl overflow-hidden relative mb-6 shadow-lg">
-                  <img src={level.image} alt={level.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" />
+                  <img 
+                    src={level.image ? fixUrl(level.image) : "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80"} 
+                    alt={level.title} 
+                    className="w-full h-full object-cover" 
+                    referrerPolicy="no-referrer" 
+                    loading="lazy" 
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80";
+                    }}
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-green via-transparent to-transparent opacity-60" />
                   <div className="absolute bottom-6 left-6 right-6">
                     <div className="text-brand-gold text-[10px] font-bold uppercase tracking-widest mb-1">{level.grades || level.subtitle}</div>
@@ -704,7 +728,17 @@ const Management = () => {
             >
               <div className="w-24 h-24 bg-brand-green/5 rounded-full mx-auto mb-6 flex items-center justify-center text-brand-gold group-hover:bg-brand-green group-hover:text-brand-cream transition-colors overflow-hidden">
                 {leader.image ? (
-                  <img src={leader.image} alt={leader.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" />
+                  <img 
+                    src={fixUrl(leader.image)} 
+                    alt={leader.name} 
+                    className="w-full h-full object-cover" 
+                    referrerPolicy="no-referrer" 
+                    loading="lazy" 
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80";
+                    }}
+                  />
                 ) : (
                   <Star size={32} />
                 )}
@@ -723,7 +757,17 @@ const Management = () => {
               <div key={`mob-mgmt-${i}`} className="min-w-[80%] snap-center bg-white p-8 rounded-xl shadow-sm border border-brand-green/5 text-center">
                 <div className="w-20 h-20 bg-brand-green/5 rounded-full mx-auto mb-6 flex items-center justify-center text-brand-gold overflow-hidden">
                   {leader.image ? (
-                    <img src={leader.image} alt={leader.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" />
+                    <img 
+                      src={fixUrl(leader.image)} 
+                      alt={leader.name} 
+                      className="w-full h-full object-cover" 
+                      referrerPolicy="no-referrer" 
+                      loading="lazy" 
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80";
+                      }}
+                    />
                   ) : (
                     <Star size={24} />
                   )}
@@ -968,8 +1012,8 @@ export const Home = () => {
       exit={{ opacity: 0 }}
     >
       <SEO 
-        title="Best Islamic Girls School in Surat | Al-Mu'minah School"
-        description="Al-Mu'minah Group of Schools is the top English medium Islamic girls school in Surat. Modern SSC academics integrated with Quranic Arabic, Tajweed, and Islamic values. Secure, all-ladies staff environment."
+        title="Islamic English Medium School in Surat | Al-Mu'minah School"
+        description="Al-Mu'minah Group of Schools is the leading English medium Islamic girls school in Surat. Modern SSC academics integrated with Quranic Arabic, Tajweed, and Islamic values in a secure environment."
         keywords="Islamic school Surat, Muslim girls school Surat, English medium Islamic school Surat, best girls school in Surat, school in Rander Surat, top school in Surat 2026, Arabic education Surat, hijab allowed school, Islamic English school near me, school with Islamic education Surat"
         schemaData={schoolSchema}
       />

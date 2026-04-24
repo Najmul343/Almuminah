@@ -21,6 +21,7 @@ const Navbar = ({ brochure, logo, contact }: { brochure: string; logo: string; c
     { name: 'Curriculum', path: '/curriculum' },
     { name: 'Gallery', path: '/gallery' },
     { name: 'Events', path: '/events' },
+    { name: 'Blog', path: '/blog' },
     { name: 'Contact', path: '/contact' },
   ];
 
@@ -46,10 +47,10 @@ const Navbar = ({ brochure, logo, contact }: { brochure: string; logo: string; c
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-24 md:h-32 items-center">
-          <Link to="/" className="flex items-center space-x-4 md:space-x-6 shrink-0 mr-4 md:mr-8">
-            <div className="w-14 h-14 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center text-brand-green font-georgia text-xl md:text-3xl font-bold border-2 border-brand-gold overflow-hidden shrink-0 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 xl:px-8">
+        <div className="flex justify-between h-20 lg:h-24 xl:h-32 items-center">
+          <Link to="/" className="flex items-center space-x-2 xl:space-x-4 shrink-0">
+            <div className="w-10 h-10 lg:w-16 lg:h-16 xl:w-20 xl:h-20 bg-white rounded-full flex items-center justify-center text-brand-green font-georgia text-base lg:text-xl xl:text-2xl font-bold border-2 border-brand-gold overflow-hidden shrink-0 shadow-sm">
               {logo || contact?.logo || contact?.image ? (
                 <img 
                   src={logo || contact?.logo || contact?.image} 
@@ -62,11 +63,11 @@ const Navbar = ({ brochure, logo, contact }: { brochure: string; logo: string; c
               )}
             </div>
             <div className="flex flex-col w-fit">
-              <span className="text-lg md:text-3xl font-georgia font-bold tracking-tight text-brand-green leading-none whitespace-nowrap">
+              <span className="text-sm lg:text-xl xl:text-3xl font-georgia font-bold tracking-tight text-brand-green leading-none whitespace-nowrap">
                 AL-MU'MINAH SCHOOL
               </span>
-              <div className="h-[1px] bg-brand-green/20 w-full my-1.5 md:my-2" />
-              <div className="flex justify-between text-[11px] md:text-[16px] uppercase font-bold text-brand-gold font-georgia tracking-tighter">
+              <div className="h-[1px] bg-brand-green/20 w-full my-1 md:my-2" />
+              <div className="flex justify-between text-[8px] lg:text-[11px] xl:text-[16px] uppercase font-bold text-brand-gold font-georgia tracking-tighter">
                 <span>EDUCATION</span>
                 <span>FOR</span>
                 <span>BOTH</span>
@@ -76,14 +77,14 @@ const Navbar = ({ brochure, logo, contact }: { brochure: string; logo: string; c
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center space-x-10">
-            <div className="flex space-x-8">
+          <div className="hidden lg:flex items-center space-x-2 xl:space-x-8">
+            <div className="flex space-x-1.5 xl:space-x-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
                   className={cn(
-                    "text-[13px] font-bold uppercase tracking-widest transition-all hover:text-brand-gold relative py-2",
+                    "text-[9px] xl:text-[12px] font-bold uppercase tracking-tighter xl:tracking-widest transition-all hover:text-brand-gold relative py-2",
                     location.pathname === link.path ? "text-brand-gold after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-brand-gold" : "text-brand-green/80"
                   )}
                 >
@@ -96,12 +97,12 @@ const Navbar = ({ brochure, logo, contact }: { brochure: string; logo: string; c
                 href={brochure} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="px-6 py-3 bg-brand-green text-brand-cream text-xs font-bold uppercase tracking-widest rounded-full hover:bg-brand-gold transition-all shadow-lg shadow-brand-green/20 flex items-center"
+                className="px-2 py-1.5 xl:px-6 xl:py-3 bg-brand-green text-brand-cream text-[9px] xl:text-xs font-bold uppercase tracking-widest rounded-full hover:bg-brand-gold transition-all shadow-lg shadow-brand-green/20 flex items-center shrink-0"
               >
-                <FileText size={14} className="mr-2" /> Brochure
+                <FileText size={12} className="mr-1 xl:mr-2" /> <span className="hidden xl:inline">Brochure</span><span className="xl:hidden">PDF</span>
               </a>
             ) : (
-              <Link to="/admissions" className="px-6 py-3 bg-brand-green text-brand-cream text-xs font-bold uppercase tracking-widest rounded-full hover:bg-brand-gold transition-all shadow-lg shadow-brand-green/20">
+              <Link to="/admissions" className="px-2 py-1.5 xl:px-6 xl:py-3 bg-brand-green text-brand-cream text-[9px] xl:text-xs font-bold uppercase tracking-widest rounded-full hover:bg-brand-gold transition-all shadow-lg shadow-brand-green/20 shrink-0">
                 Admissions
               </Link>
             )}
@@ -228,6 +229,7 @@ const Footer = ({ logo, socials, contact }: { logo: string; socials: any[]; cont
               <li><Link to="/management" className="hover:text-brand-cream transition-colors">Trust & Management</Link></li>
               <li><Link to="/curriculum" className="hover:text-brand-cream transition-colors">Academic Curriculum</Link></li>
               <li><Link to="/admissions" className="hover:text-brand-cream transition-colors">Admissions Process</Link></li>
+              <li><Link to="/blog" className="hover:text-brand-cream transition-colors">Educational Blog</Link></li>
               <li><Link to="/contact" className="hover:text-brand-cream transition-colors">Get in Touch</Link></li>
             </ul>
           </div>

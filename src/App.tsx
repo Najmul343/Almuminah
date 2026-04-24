@@ -13,6 +13,7 @@ const Curriculum = lazy(() => import('./pages/Curriculum').then(m => ({ default:
 const Gallery = lazy(() => import('./pages/Gallery').then(m => ({ default: m.Gallery })));
 const Events = lazy(() => import('./pages/Events').then(m => ({ default: m.Events })));
 const Management = lazy(() => import('./pages/Management'));
+const Blog = lazy(() => import('./pages/Blog').then(m => ({ default: m.Blog })));
 
 // Create a client
 const queryClient = new QueryClient({
@@ -50,6 +51,7 @@ export default function App() {
                 <Route path="/events" element={<Events />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/management" element={<Management />} />
+                <Route path="/blog" element={<Blog />} />
               </Routes>
             </AnimatePresence>
           </Suspense>
