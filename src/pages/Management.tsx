@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { useQuery } from '@tanstack/react-query';
+import { SEO } from '../components/SEO';
 import { Skeleton, ErrorState, EmptyState } from '../components/Feedback';
 import { Star, Quote, Target, Award, Users, GraduationCap } from 'lucide-react';
 import { fetchTrustDetails, fetchFaculty } from '../services/googleSheets';
@@ -53,6 +54,11 @@ const Management = () => {
 
   return (
     <div className="bg-white">
+      <SEO 
+        title="Our Management & Leadership | Meer Education Trust Surat"
+        description="Meet the leadership of Al-Mu'minah School and Meer Education Trust. Guided by Maulana Arshad Ahmed Meer and Dr. Shehnaz Shaikh, we provide high-quality Islamic education."
+        keywords="Maulana Arshad Ahmed Meer, Dr Shehnaz Shaikh, Meer Education Trust, board of directors surat schools, Islamic school management"
+      />
       {/* Hero Section */}
       <section className="relative py-24 bg-brand-green overflow-hidden">
         <div className="absolute inset-0 opacity-10">

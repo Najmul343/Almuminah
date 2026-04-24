@@ -1,13 +1,17 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { SEO } from '../components/SEO';
 import { Calendar, User, ChevronRight, X, ChevronLeft, Volume2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { fetchAnnouncements, fetchEvents } from '../services/googleSheets';
 
 export const Events = () => {
   const [announcements, setAnnouncements] = React.useState<any[]>([]);
+
   const [events, setEvents] = React.useState<any[]>([]);
+
   const [loading, setLoading] = React.useState(true);
+
   const [selectedEvent, setSelectedEvent] = React.useState<any | null>(null);
 
   React.useEffect(() => {
@@ -31,6 +35,11 @@ export const Events = () => {
 
   return (
     <div className="min-h-screen bg-brand-cream/30 pt-32 pb-24">
+      <SEO 
+        title="School Events & Announcements | Al-Mu'minah School Surat"
+        description="Stay updated with the latest events, sports days, annual functions, and announcements from Al-Mu'minah School, Surat. Best Islamic girls school news and updates."
+        keywords="school events Surat, Al-Mu'minah school announcements, annual function Surat school, Islamic school activities, girls school sports day Surat"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Announcements Section */}

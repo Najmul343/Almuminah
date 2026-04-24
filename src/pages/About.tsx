@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { SEO } from '../components/SEO';
 
 export const About = () => {
   return (
@@ -9,6 +10,11 @@ export const About = () => {
       exit={{ opacity: 0 }}
       className="py-20"
     >
+      <SEO 
+        title="About Us | Al-Mu'minah Group of Schools Surat"
+        description="Learn about the ideology and vision of Al-Mu'minah School. We integrate Islamic English medium education with modern SSC academics for girls in Surat, Gujarat."
+        keywords="Al-Mu'minah School history, Islamic girls school vision, Dr Shehnaz Shaikh, modern Islamic education Surat, hijab allowed girls school"
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <span className="text-brand-gold font-semibold uppercase tracking-widest text-base mb-4 block">About Us</span>
         <h1 className="text-6xl md:text-7xl font-serif text-brand-green mb-12 leading-tight">

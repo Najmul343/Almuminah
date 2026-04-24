@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'motion/react';
 import { Skeleton, EmptyState, ErrorState } from '../components/Feedback';
+import { SEO } from '../components/SEO';
 import { ArrowRight, BookOpen, GraduationCap, Heart, Star, CheckCircle, ChevronLeft, ChevronRight, Send, Camera, Palette, Shield, Zap, Cpu, FileText, UserCheck, Video, ShieldCheck, Users, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
@@ -11,6 +12,7 @@ const TopperCarousel = () => {
   const [toppers, setToppers] = React.useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     const loadToppers = async () => {
@@ -21,8 +23,15 @@ const TopperCarousel = () => {
     loadToppers();
   }, []);
 
-  const next = () => toppers.length > 0 && setCurrentIndex((prev) => (prev + 1) % toppers.length);
-  const prev = () => toppers.length > 0 && setCurrentIndex((prev) => (prev - 1 + toppers.length) % toppers.length);
+  const next = () => {
+    if (toppers.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % toppers.length);
+  };
+
+  const prev = () => {
+    if (toppers.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + toppers.length) % toppers.length);
+  };
 
   if (loading) return (
     <div className="py-16 bg-brand-gold/10 flex items-center justify-center">
@@ -34,32 +43,52 @@ const TopperCarousel = () => {
 
   return (
     <section className="py-12 bg-brand-gold/10 overflow-hidden">
-      <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <span className="text-brand-gold font-bold uppercase tracking-widest text-sm">Academic Excellence</span>
-          <h2 className="text-5xl font-serif text-brand-green mt-4">Our Proud Toppers</h2>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+          <div className="text-center md:text-left">
+            <span className="text-brand-gold font-bold uppercase tracking-widest text-sm">Academic Excellence</span>
+            <h2 className="text-4xl md:text-5xl font-serif text-brand-green mt-2">Our Proud Toppers</h2>
+          </div>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={prev}
+              className="w-10 h-10 rounded-full border border-brand-gold/30 flex items-center justify-center text-brand-gold hover:bg-brand-gold hover:text-brand-green transition-all"
+              aria-label="Previous topper"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button 
+              onClick={next}
+              className="w-10 h-10 rounded-full border border-brand-gold/30 flex items-center justify-center text-brand-gold hover:bg-brand-gold hover:text-brand-green transition-all"
+              aria-label="Next topper"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
         </div>
 
         <div className="relative group">
-          <div className="flex overflow-hidden">
+          <div className="overflow-visible">
             <motion.div 
-              className="flex space-x-4 md:space-x-6"
+              className="flex gap-4 md:gap-6 cursor-grab active:cursor-grabbing"
+              drag="x"
+              dragConstraints={{ right: 0, left: -((toppers.length - 1) * 300) }}
               animate={{
-                x: [0, -100 * toppers.length],
+                x: -currentIndex * (window.innerWidth < 768 ? 216 : 304), // card width + gap
               }}
               transition={{
-                x: {
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  duration: toppers.length * 5,
-                  ease: "linear",
-                },
+                type: "spring",
+                stiffness: 300,
+                damping: 30
               }}
             >
-              {[...toppers, ...toppers, ...toppers].map((topper, i) => (
+              {toppers.map((topper, i) => (
                 <div 
                   key={`${topper.name}-${i}`} 
-                  className="flex-shrink-0 w-[200px] md:w-[280px] group relative bg-white rounded-2xl overflow-hidden shadow-md border border-brand-green/5 p-2 transition-all hover:shadow-xl"
+                  className={cn(
+                    "flex-shrink-0 w-[200px] md:w-[280px] group relative bg-white rounded-2xl overflow-hidden shadow-md border border-brand-green/5 p-2 transition-all hover:shadow-xl",
+                    currentIndex === i ? "ring-2 ring-brand-gold ring-offset-4" : "opacity-60 scale-95"
+                  )}
                 >
                   <div className="aspect-[4/5] rounded-xl overflow-hidden relative">
                     <img 
@@ -93,6 +122,21 @@ const TopperCarousel = () => {
           {/* Gradient Overlays for smooth fade */}
           <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-brand-gold/10 to-transparent z-10 pointer-events-none" />
           <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-brand-gold/10 to-transparent z-10 pointer-events-none" />
+        </div>
+
+        {/* Pagination Dots */}
+        <div className="flex justify-center gap-2 mt-8">
+          {toppers.map((_, i) => (
+            <button
+              key={`dot-${i}`}
+              onClick={() => setCurrentIndex(i)}
+              className={cn(
+                "w-2 h-2 rounded-full transition-all duration-300",
+                currentIndex === i ? "w-8 bg-brand-gold" : "bg-brand-gold/20"
+              )}
+              aria-label={`Go to topper ${i + 1}`}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -874,12 +918,61 @@ const News = () => {
 };
 
 export const Home = () => {
+  const schoolSchema = {
+    "@context": "https://schema.org",
+    "@type": "School",
+    "name": "Al-Mu'minah School",
+    "alternateName": "Al-Mu'minah Group of Schools",
+    "url": window.location.origin,
+    "logo": `${window.location.origin}/logo.png`,
+    "description": "Top English medium Islamic girls school in Surat. Modern SSC academics integrated with Quranic Arabic, Tajweed, and Islamic values.",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Rampura, Kankra Street",
+      "addressLocality": "Surat",
+      "addressRegion": "Gujarat",
+      "postalCode": "395003",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 21.2023,
+      "longitude": 72.8311
+    },
+    "telephone": "+91-261-2345678",
+    "hasMap": "https://maps.google.com/?q=Al-Mu'minah School Surat",
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "16:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Saturday",
+        "opens": "09:00",
+        "closes": "13:00"
+      }
+    ],
+    "sameAs": [
+      "https://facebook.com/almuminahschool",
+      "https://instagram.com/almuminahschool"
+    ]
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
+      <SEO 
+        title="Best Islamic Girls School in Surat | Al-Mu'minah School"
+        description="Al-Mu'minah Group of Schools is the top English medium Islamic girls school in Surat. Modern SSC academics integrated with Quranic Arabic, Tajweed, and Islamic values. Secure, all-ladies staff environment."
+        keywords="Islamic school Surat, Muslim girls school Surat, English medium Islamic school Surat, best girls school in Surat, school in Rander Surat, top school in Surat 2026, Arabic education Surat, hijab allowed school, Islamic English school near me, school with Islamic education Surat"
+        schemaData={schoolSchema}
+      />
       <Hero />
       <Stats />
       <TopperCarousel />

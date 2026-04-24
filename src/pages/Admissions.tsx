@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { SEO } from '../components/SEO';
 import { 
   FileText, 
   CheckCircle, 
@@ -116,6 +117,11 @@ export const Admissions = () => {
       exit={{ opacity: 0 }}
       className="py-20 bg-brand-cream/10"
     >
+      <SEO 
+        title="Admissions 2026 | Best Girls School in Surat | Al-Mu'minah School"
+        description="Apply for admission at Al-Mu'minah Group of Schools, Surat. Affordable English medium Islamic education for girls. Admission rules, fees structure, and school policies."
+        keywords="school admission Surat 2026, affordable schools in Surat, English medium schools list Surat, girls only islamic school surat, best school for girls surat"
+      />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-20">
           <span className="text-brand-gold font-semibold uppercase tracking-widest text-sm mb-4 block">Admissions</span>

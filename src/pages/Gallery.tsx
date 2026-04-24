@@ -1,12 +1,15 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { SEO } from '../components/SEO';
 import { fetchGalleryImages } from '../services/googleSheets';
 import { Maximize2, X, Image as ImageIcon } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 export const Gallery = () => {
   const [images, setImages] = React.useState<any[]>([]);
+
   const [loading, setLoading] = React.useState(true);
+
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -41,6 +44,11 @@ export const Gallery = () => {
       exit={{ opacity: 0 }}
       className="py-24 bg-brand-cream/20 min-h-screen"
     >
+      <SEO 
+        title="School Gallery | Glimpses of Al-Mu'minah School Surat"
+        description="Browse photos of Al-Mu'minah School, Surat. See our modern infrastructure, Islamic environment, sports events, and classroom activities for girls."
+        keywords="school gallery Surat, Al-Mu'minah school photos, Islamic school campus Surat, girls school activities photos, best school infrastructure Surat"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-20">
           <span className="text-brand-gold font-bold uppercase tracking-widest text-xs">Visual Journey</span>

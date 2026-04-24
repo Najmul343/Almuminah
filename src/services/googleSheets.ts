@@ -150,6 +150,7 @@ const fetchData = async (tabName: string) => {
         const dateKey = findKey(['date', 'time', 'year', 'academic']);
         const whatsappKey = findKey(['whatsapp', 'wa', 'phone', 'mobile', 'contact', 'primaryphone']);
         const brochureKey = findKey(['brochure', 'pdf', 'link', 'download']);
+        const stdKey = findKey(['std', 'standard', 'class', 'grade', 'level']);
 
         return { 
           ...obj,
@@ -159,6 +160,7 @@ const fetchData = async (tabName: string) => {
           images: String(finalImages || ''),
           caption: obj.caption || (captionKey ? normalized[captionKey] : '') || (obj[1] || obj['B'] || ''),
           title: obj.title || (titleKey ? normalized[titleKey] : '') || (obj[0] || obj['A'] || ''),
+          std: obj.std || (stdKey ? normalized[stdKey] : '') || (obj[1] || obj['B'] || ''),
           subtitle: obj.subtitle || normalized.subtitle || '',
           date: obj.date || (dateKey ? normalized[dateKey] : '') || (obj[3] || obj['D'] || ''),
           content: obj.content || normalized.content || normalized.description || (captionKey ? normalized[captionKey] : '') || '',
@@ -324,15 +326,117 @@ export const fetchSocialMedia = async () => {
 export const fetchContactDetails = async () => {
   try {
     const data = await fetchData('Contact');
-    const merged = mergeRows(data);
-    if (!merged) throw new Error('No contact data');
-    return merged;
+    if (!data || data.length === 0) throw new Error('No contact data');
+    
+    // Helper to find value by normalized key
+    const getVal = (row: any, ...keys: string[]) => {
+      const rowKeys = Object.keys(row);
+      for (const key of keys) {
+        const foundKey = rowKeys.find(rk => rk.toLowerCase().replace(/\s+/g, '') === key.toLowerCase().replace(/\s+/g, ''));
+        if (foundKey && row[foundKey]) return row[foundKey];
+      }
+      return '';
+    };
+
+    // If we have multiple rows, they might represent different branches
+    // Alternatively, if there is only one row, it might contain info for both branches
+    let branches = data.map(row => ({
+      name: getVal(row, 'branch', 'name', 'schoolname') || (data.indexOf(row) === 0 ? 'Primary School' : 'Pre Primary School'),
+      address: String(getVal(row, 'address', 'location') || '').trim(),
+      phone: String(getVal(row, 'primaryphone', 'phone', 'mobile', 'primary') || '').trim(),
+      secondaryPhone: String(getVal(row, 'secondaryphone', 'whatsapp', 'contact', 'secondary') || '').trim(),
+      email: String(getVal(row, 'email', 'mail') || '').trim(),
+      officeHours: String(getVal(row, 'officehours', 'hours', 'timing') || '').split('\n').map(h => h.trim()).filter(Boolean),
+      mapLink: getVal(row, 'map', 'maplink', 'googlemap', 'location')
+    }));
+
+    // Logic to handle single-row split if needed
+    if (branches.length === 1) {
+      const b = branches[0];
+      const emails = b.email.split(/[\n,]/).map(e => e.trim()).filter(Boolean);
+      const addresses = b.address.split(/(?=\(Pre Primary|Pre-Primary)/i).map(a => a.trim()).filter(Boolean);
+      
+      // If we have distinct info for both schools in one row
+      if (emails.length >= 2 || b.secondaryPhone || addresses.length >= 2) {
+        branches = [
+          {
+            name: 'Primary School',
+            address: addresses[0],
+            phone: b.phone,
+            secondaryPhone: '',
+            email: emails[0],
+            officeHours: b.officeHours,
+            mapLink: b.mapLink
+          },
+          {
+            name: 'Pre Primary School',
+            address: addresses[1] || addresses[0],
+            phone: b.secondaryPhone || b.phone,
+            secondaryPhone: '',
+            email: emails[1] || emails[0],
+            officeHours: b.officeHours,
+            mapLink: b.mapLink
+          }
+        ];
+      }
+    }
+
+    // For backward compatibility and specialized UI, we return both structured branches and merged fallbacks
+    const addresses = [...new Set(branches.map(b => b.address).filter(Boolean))];
+    const phones = [...new Set(branches.flatMap(b => [b.phone, b.secondaryPhone]).filter(Boolean))];
+    const emails = [...new Set(branches.map(b => b.email).filter(Boolean))];
+    const hours = [...new Set(branches.flatMap(b => b.officeHours).filter(Boolean))];
+
+    return {
+      branches,
+      addresses,
+      primaryPhones: phones,
+      emails,
+      officeHours: hours,
+      mapLink: branches[0]?.mapLink || '',
+      logo: data[0]?.logo || '',
+      brochure: data[0]?.brochure || '',
+      whatsapp: data[0]?.whatsapp || '',
+      // Backward compatibility
+      primaryphone: phones[0] || '',
+      secondaryphone: phones[1] || '',
+      email: emails[0] || '',
+      address: addresses[0] || '',
+      officehours: hours[0] || ''
+    };
   } catch (error) {
     return {
-      primaryphone: "+91-261-2345678",
-      email: "almuminah_school@yahoo.com",
-      address: "Surat, Gujarat – 395003",
-      logo: 'https://lh3.googleusercontent.com/d/1xGnhNgSHR-JE7uAXM5xvsPX4bYB1uNBXwYBLtVoYgIo'
+      branches: [
+        {
+          name: 'Primary School',
+          address: '7/2262, 2263, Kadiya Sheri, Rampura, Kankra Street, Katargam Darwaja, Surat, Gujarat 395003',
+          phone: '+91 7874387345',
+          email: 'almuminah.psurat@gmail.com',
+          officeHours: ["Monday – Friday: 10:00 AM – 5:00 PM", "Saturday: 9:00 AM – 1:00 PM"],
+          mapLink: ""
+        },
+        {
+          name: 'Pre Primary School',
+          address: '7/2262, 2263, Kadiya Sheri, Rampura, Kankra Street, Katargam Darwaja, Surat, Gujarat 395003',
+          phone: '+91 9737239456',
+          email: 'almuminah.ppsurat@gmail.com',
+          officeHours: ["Monday – Friday: 10:00 AM – 5:00 PM", "Saturday: 9:00 AM – 1:00 PM"],
+          mapLink: ""
+        }
+      ],
+      addresses: ["7/2262, 2263, Kadiya Sheri, Rampura, Kankra Street, Katargam Darwaja, Surat, Gujarat 395003"],
+      primaryPhones: ["+91 7874387345", "+91 9737239456"],
+      emails: ["almuminah.psurat@gmail.com", "almuminah.ppsurat@gmail.com"],
+      officeHours: ["Monday – Friday: 10:00 AM – 5:00 PM", "Saturday: 9:00 AM – 1:00 PM"],
+      mapLink: "",
+      logo: 'https://lh3.googleusercontent.com/d/1xGnhNgSHR-JE7uAXM5xvsPX4bYB1uNBXwYBLtVoYgIo',
+      brochure: '',
+      whatsapp: '',
+      primaryphone: "+91 7874387345",
+      secondaryphone: "+91 9737239456",
+      email: "almuminah.psurat@gmail.com",
+      address: "7/2262, 2263, Kadiya Sheri, Rampura, Kankra Street, Katargam Darwaja, Surat, Gujarat 395003",
+      officehours: "Monday – Friday: 10:00 AM – 5:00 PM"
     };
   }
 };
@@ -354,4 +458,19 @@ export const fetchGlobalSettings = async () => {
     brochure: primary.brochure || trust?.brochure || contact?.brochure || '',
     whatsapp: primary.whatsapp || contact?.whatsapp || contact?.primaryphone || '',
   };
+};
+
+export const fetchBooks = async () => {
+  try {
+    const data = await fetchData('Books Link');
+    if (!data || data.length === 0) throw new Error('No books data');
+    return data;
+  } catch (error) {
+    // Return some placeholder books if fetch fails
+    return [
+      { title: "Islamic Studies Vol 1", std: "Std. I", image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80" },
+      { title: "Arabic Foundations", std: "Nursery", image: "https://images.unsplash.com/photo-1589998059171-988d887df646?auto=format&fit=crop&q=80" },
+      { title: "Daily Duas", std: "Junior KG", image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80" },
+    ];
+  }
 };
