@@ -964,12 +964,15 @@ const News = () => {
 export const Home = () => {
   const schoolSchema = {
     "@context": "https://schema.org",
-    "@type": "School",
+    "@type": "EducationalOrganization",
     "name": "Al-Mu'minah School",
-    "alternateName": "Al-Mu'minah Group of Schools",
-    "url": window.location.origin,
-    "logo": `${window.location.origin}/logo.png`,
-    "description": "Top English medium Islamic girls school in Surat. Modern SSC academics integrated with Quranic Arabic, Tajweed, and Islamic values.",
+    "alternateName": "Al-Mu'minah Group of Schools Surat",
+    "url": "https://almuminah.com",
+    "logo": "https://almuminah.com/logo.png",
+    "image": "https://almuminah.com/og-image.jpg",
+    "description": "Al-Mu'minah Group of Schools is the leading English medium Islamic girls school in Surat. Modern SSC academics integrated with Quranic Arabic, Tajweed, and Islamic values.",
+    "telephone": "+91 75743 87345",
+    "email": "almuminah.psurat@gmail.com",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Rampura, Kankra Street",
@@ -983,22 +986,6 @@ export const Home = () => {
       "latitude": 21.2023,
       "longitude": 72.8311
     },
-    "telephone": "+91-261-2345678",
-    "hasMap": "https://maps.google.com/?q=Al-Mu'minah School Surat",
-    "openingHoursSpecification": [
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        "opens": "09:00",
-        "closes": "16:00"
-      },
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": "Saturday",
-        "opens": "09:00",
-        "closes": "13:00"
-      }
-    ],
     "sameAs": [
       "https://facebook.com/almuminahschool",
       "https://instagram.com/almuminahschool"

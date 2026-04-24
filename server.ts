@@ -11,7 +11,7 @@ async function startServer() {
   const PORT = 3000;
 
   // Dynamic Sitemap XML
-  app.get("/sitemap.xml", (req, res) => {
+  const generateSitemap = () => {
     const baseUrl = "https://almuminah.com";
     const routes = [
       { url: "/", priority: "1.0", changefreq: "daily" },
@@ -25,7 +25,7 @@ async function startServer() {
       { url: "/blog", priority: "0.9", changefreq: "daily" },
     ];
 
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+    return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${routes
     .map(
@@ -38,9 +38,16 @@ async function startServer() {
     )
     .join("")}
 </urlset>`;
+  };
 
+  app.get("/sitemap.xml", (req, res) => {
     res.header("Content-Type", "application/xml");
-    res.send(sitemap);
+    res.send(generateSitemap());
+  });
+
+  app.get("/api/sitemap", (req, res) => {
+    res.header("Content-Type", "application/xml");
+    res.send(generateSitemap());
   });
 
   // Robots.txt
