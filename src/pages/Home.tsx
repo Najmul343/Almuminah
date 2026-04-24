@@ -1015,6 +1015,27 @@ export const Home = () => {
       <Testimonials />
       <Management />
       <News />
+      <section className="py-20 bg-brand-cream/50">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-serif text-brand-green mb-8 leading-tight">
+            Leading Islamic School in Surat for Girls
+          </h2>
+          <div className="space-y-6 text-brand-green/80 text-lg leading-relaxed">
+            <p>
+              Al Mu’minah School is a trusted <span className="font-bold text-brand-green">Islamic school in Surat</span>, dedicated to providing a perfect balance of modern academics and strong Islamic values. Located in Rander, our institution focuses on nurturing confident, knowledgeable, and morally grounded students.
+            </p>
+            <p>
+              As a reputed <span className="font-bold text-brand-green">English medium school for girls</span>, we ensure that students receive high-quality education aligned with current academic standards while staying deeply connected to their religious identity. Our curriculum combines core subjects with Quranic studies, Arabic learning, and character development.
+            </p>
+            <p>
+              Recognized as a growing <span className="font-bold text-brand-green">Rander Surat school</span>, we are committed to creating a safe and inspiring environment where girls can excel academically and spiritually. Our experienced teachers, structured programs, and value-based approach make us a preferred choice for parents seeking holistic education.
+            </p>
+            <p>
+              At Al Mu’minah School, we aim to prepare students not just for exams, but for life—with knowledge, discipline, and strong values.
+            </p>
+          </div>
+        </div>
+      </section>
     </motion.div>
   );
 };
