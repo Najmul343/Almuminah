@@ -62,16 +62,22 @@ export const fixUrl = (url: any, isImage: boolean = true): string => {
   const fixedUrls = urls.map(u => {
     // Handle Google Drive links
     if (u.includes('drive.google.com')) {
-      // Improved regex to handle various drive link formats
-      const idMatch = u.match(/\/d\/([a-zA-Z0-9_-]{25,})/) || 
-                      u.match(/id=([a-zA-Z0-9_-]{25,})/);
+      // Robust ID extraction
+      let fileId = '';
+      const dMatch = u.match(/\/d\/([\w-]{25,})/);
+      const idParamMatch = u.match(/[?&]id=([\w-]{25,})/);
       
-      if (idMatch && idMatch[1]) {
-        // If it's for an image tag, use lh3 (direct image). 
-        // For documents like brochure/PDF, use the drive view link.
+      if (dMatch) fileId = dMatch[1];
+      else if (idParamMatch) fileId = idParamMatch[1];
+      
+      if (fileId) {
+        // Cleaning potential residues from ID
+        fileId = fileId.split(/[/?&]/)[0];
+        
+        // Return reliable direct link for images, view link for docs
         return isImage 
-          ? `https://lh3.googleusercontent.com/d/${idMatch[1]}`
-          : `https://drive.google.com/file/d/${idMatch[1]}/view`;
+          ? `https://lh3.googleusercontent.com/d/${fileId}=s1000`
+          : `https://drive.google.com/file/d/${fileId}/view?usp=sharing`;
       }
     }
     return u;
@@ -141,7 +147,8 @@ const fetchData = async (tabName: string) => {
         Object.keys(obj).forEach(key => {
           const val = obj[key];
           if (typeof val === 'string' && (key.includes('image') || key.includes('photo') || key.includes('url') || key.includes('picture') || key.includes('brochure') || key.includes('pdf') || key.includes('link') || val.startsWith('http'))) {
-            const isImage = !(key.includes('brochure') || key.includes('pdf') || key.includes('link') || key.includes('download'));
+            // Only explicitly labeled document/download columns are treated as non-images
+            const isImage = !(key.includes('brochure') || key.includes('pdf') || key.includes('download'));
             obj[key] = fixUrl(val, isImage);
           }
         });

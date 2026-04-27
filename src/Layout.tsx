@@ -260,7 +260,7 @@ const Footer = ({ logo, socials, contact }: { logo: string; socials: any[]; cont
         </div>
         
         <div className="border-t border-brand-cream/10 pt-8 text-center text-xs text-brand-cream/40 uppercase tracking-widest font-georgia">
-          © {new Date().getFullYear()} AL-MU'MINAH GROUP OF SCHOOLS. All Rights Reserved.
+          © {new Date().getFullYear()} AL-MU'MINAH SCHOOL,SURAT. Managed by Meer Education Trust .All Rights Reserved.
         </div>
       </div>
     </footer>

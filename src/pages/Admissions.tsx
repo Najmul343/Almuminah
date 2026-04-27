@@ -46,19 +46,35 @@ export const Admissions = () => {
     setExpandedSection(expandedSection === id ? null : id);
   };
 
-  const SectionHeader = ({ icon: Icon, title, color = "text-brand-green", isCollapsible = false, isOpen = false, onToggle }: { icon: any, title: string, color?: string, isCollapsible?: boolean, isOpen?: boolean, onToggle?: () => void }) => (
+  const SectionHeader = ({ 
+    icon: Icon, 
+    title, 
+    color = "text-brand-green", 
+    isCollapsible = false, 
+    isOpen = false, 
+    onToggle,
+    titleClassName = "text-2xl md:text-5xl"
+  }: { 
+    icon: any, 
+    title: string, 
+    color?: string, 
+    isCollapsible?: boolean, 
+    isOpen?: boolean, 
+    onToggle?: () => void,
+    titleClassName?: string
+  }) => (
     <div 
       className={`flex items-center justify-between mb-4 md:mb-8 ${isCollapsible ? 'cursor-pointer select-none' : ''}`}
       onClick={onToggle}
     >
-      <div className="flex items-center space-x-4">
-        <div className={`p-2 md:p-3 rounded-xl md:rounded-2xl bg-brand-gold/10 ${color}`}>
+      <div className="flex items-center space-x-3 md:space-x-4 min-w-0">
+        <div className={`p-2 md:p-3 rounded-xl md:rounded-2xl bg-brand-gold/10 ${color} shrink-0`}>
           <Icon size={24} className="md:w-8 md:h-8" />
         </div>
-        <h2 className={`text-2xl md:text-5xl font-serif ${color}`}>{title}</h2>
+        <h2 className={`${titleClassName} font-serif ${color} break-words leading-tight`}>{title}</h2>
       </div>
       {isCollapsible && (
-        <div className={color}>
+        <div className={`${color} shrink-0 ml-2`}>
           {isOpen ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
         </div>
       )}
@@ -78,11 +94,11 @@ export const Admissions = () => {
     </ul>
   );
 
-  const CollapsibleSection = ({ id, icon, title, children, className = "", dark = false }: { id: string, icon: any, title: string, children: React.ReactNode, className?: string, dark?: boolean, key?: any }) => {
+  const CollapsibleSection = ({ id, icon, title, children, className = "", dark = false, compact = false }: { id: string, icon: any, title: string, children: React.ReactNode, className?: string, dark?: boolean, compact?: boolean, key?: React.Key }) => {
     const isOpen = expandedSection === id;
     
     return (
-      <section id={id} className={`${className} ${dark ? 'bg-brand-green text-brand-cream' : 'bg-white'} p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] shadow-md border border-brand-green/10 transition-all duration-300`}>
+      <section id={id} className={`${className} ${dark ? 'bg-brand-green text-brand-cream' : 'bg-white'} p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] shadow-md border border-brand-green/10 transition-all duration-300 h-full`}>
         <SectionHeader 
           icon={icon} 
           title={title} 
@@ -90,6 +106,7 @@ export const Admissions = () => {
           isCollapsible={true}
           isOpen={isOpen}
           onToggle={() => toggleSection(id)}
+          titleClassName={compact ? "text-xl md:text-2xl lg:text-3xl" : "text-2xl md:text-5xl"}
         />
         <AnimatePresence initial={false}>
           {(isOpen || window.innerWidth >= 768) && (
@@ -346,7 +363,7 @@ export const Admissions = () => {
                 ]
               }
             ].map((policy, i) => (
-              <CollapsibleSection key={i} id={policy.id} icon={policy.icon} title={policy.title} className="!p-6 !rounded-[2rem]">
+              <CollapsibleSection key={i} id={policy.id} icon={policy.icon} title={policy.title} className="!p-6 !rounded-[2rem]" compact={true}>
                 <ul className="space-y-3">
                   {policy.items.map((item, j) => (
                     <li key={j} className="text-sm text-brand-green/70 leading-relaxed flex items-start space-x-2">

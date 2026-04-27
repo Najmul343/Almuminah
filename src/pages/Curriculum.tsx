@@ -27,11 +27,13 @@ const BookCard: React.FC<BookCardProps & { isStacked?: boolean; stackIndex?: num
   const spineColor = SPINE_COLORS[index % SPINE_COLORS.length];
   
   // Professional Stack Physics: Slight rotation and offset for physical feel
-  const stackRotate = (stackIndex * 2.5) - 3;
-  const stackY = stackIndex * -4;
-  const stackX = stackIndex * 2;
+  // Optimized for cleaner look with multiple books
+  const stackRotate = (stackIndex * 2) - 2;
+  const stackY = stackIndex * -3;
+  const stackX = stackIndex * 1.5;
 
   const [isHovered, setIsHovered] = React.useState(false);
+  const [imageError, setImageError] = React.useState(false);
   const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -42,6 +44,13 @@ const BookCard: React.FC<BookCardProps & { isStacked?: boolean; stackIndex?: num
     setMousePos({ x, y });
   };
 
+  React.useEffect(() => {
+    setImageError(false);
+  }, [book.image, book.url]);
+
+  // Only render top 5 books in stack for performance and visual clarity
+  if (isStacked && !isExpanded && stackIndex > 5) return null;
+
   return (
     <motion.div
       layoutId={`book-${book.title}-${book.std}-${index}`}
@@ -49,7 +58,7 @@ const BookCard: React.FC<BookCardProps & { isStacked?: boolean; stackIndex?: num
       animate={{ 
         opacity: 1, 
         scale: 1,
-        zIndex: isHovered ? 100 : (isStacked && !isExpanded ? 20 - stackIndex : 10),
+        zIndex: isHovered ? 100 : (isStacked && !isExpanded ? 50 - stackIndex : 10),
       }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ 
@@ -74,7 +83,7 @@ const BookCard: React.FC<BookCardProps & { isStacked?: boolean; stackIndex?: num
     >
       <motion.div
         animate={{
-          rotate: isStacked && !isExpanded ? (isHovered ? stackRotate + 2 : stackRotate) : (isHovered ? 2 : 0),
+          rotate: isStacked && !isExpanded ? (isHovered ? stackRotate + 1 : stackRotate) : (isHovered ? 2 : 0),
           y: isHovered ? -30 : (isStacked && !isExpanded ? stackY : 0),
           x: isStacked && !isExpanded ? stackX : 0,
           scale: isHovered ? 1.05 : 1,
@@ -115,11 +124,12 @@ const BookCard: React.FC<BookCardProps & { isStacked?: boolean; stackIndex?: num
           {/* Cover */}
           <div className="relative overflow-hidden rounded-r-[10px] w-[180px] h-[250px] md:w-[220px] md:h-[310px] bg-brand-cream-dark shadow-inner">
             <img 
-              src={book.image || book.url} 
-              alt={book.title}
+              key={book.image || book.url}
+              src={imageError ? "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80" : (book.image || book.url)} 
+              alt={isStacked && !isExpanded && stackIndex > 0 ? "" : book.title}
+              onError={() => setImageError(true)}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 [image-rendering:high-quality]"
-              referrerPolicy="no-referrer"
-              loading="lazy"
+              loading={isStacked && !isExpanded && stackIndex > 1 ? "lazy" : "eager"}
               decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-black/20 group-hover:from-brand-gold/5 group-hover:to-black/10 transition-colors duration-500 pointer-events-none" />
@@ -513,9 +523,9 @@ export const Curriculum = () => {
                 {[
                   "ICSE-based textbooks are used in Pre-Primary classes to build a strong foundation in English communication and grammar.",
                   "From Std. I onwards, students are taught Gujarati, Computer, and Karate along with English, Arabic, Mathematics, and Science.",
-                  "Oxford Mathematics textbooks are used for Std. I and Std. II.",
+                  "Oxford Mathematics textbooks are used for Std. I and Std.V.",
                   "Oxford textbooks are used for Science, Geography, and History up to Std. V.",
-                  "From Std. III onwards, History, Geography, Hindi, and Quranic Arabic are introduced.",
+                  "From Std. III onwards, History, Geography, and Quranic Arabic are introduced.",
                   "NCERT textbooks are followed from Std. I to Std. VIII"
                 ].map((text, i) => (
                   <div key={i} className="flex items-start space-x-3 p-4 bg-white rounded-2xl border border-brand-green/5">
