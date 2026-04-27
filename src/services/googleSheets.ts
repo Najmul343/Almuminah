@@ -74,9 +74,10 @@ export const fixUrl = (url: any, isImage: boolean = true): string => {
         // Cleaning potential residues from ID
         fileId = fileId.split(/[/?&]/)[0];
         
-        // Return reliable direct link for images, view link for docs
+        // Return reliable direct link for images using the specific LH3 format that works best with no-referrer
+        // This format is often more stable for hotlinking when Referrer is stripped.
         return isImage 
-          ? `https://lh3.googleusercontent.com/d/${fileId}=s1000`
+          ? `https://lh3.googleusercontent.com/u/0/d/${fileId}=w1600-iv1`
           : `https://drive.google.com/file/d/${fileId}/view?usp=sharing`;
       }
     }

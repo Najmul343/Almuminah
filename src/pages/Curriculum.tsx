@@ -130,6 +130,8 @@ const BookCard: React.FC<BookCardProps & { isStacked?: boolean; stackIndex?: num
               onError={() => setImageError(true)}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 [image-rendering:high-quality]"
               loading={isStacked && !isExpanded && stackIndex > 1 ? "lazy" : "eager"}
+              referrerPolicy="no-referrer"
+              crossOrigin="anonymous"
               decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-black/20 group-hover:from-brand-gold/5 group-hover:to-black/10 transition-colors duration-500 pointer-events-none" />
@@ -281,6 +283,7 @@ export const Curriculum = () => {
                   alt={selectedBook.title}
                   className="max-w-full max-h-full object-contain [image-rendering:high-quality]"
                   referrerPolicy="no-referrer"
+                  crossOrigin="anonymous"
                 />
                 {/* Click image to close too */}
                 <div 

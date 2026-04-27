@@ -96,6 +96,7 @@ const TopperCarousel = () => {
                       alt={topper.name} 
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                       referrerPolicy="no-referrer" 
+                      crossOrigin="anonymous"
                       loading="lazy"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
@@ -394,6 +395,7 @@ const Hero = () => {
           alt="School Background" 
           className="w-full h-full object-cover opacity-30"
           referrerPolicy="no-referrer"
+          crossOrigin="anonymous"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-brand-green/50 to-brand-green" />
       </div>
@@ -572,6 +574,7 @@ const Programs = () => {
                   alt={level.title} 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                   referrerPolicy="no-referrer" 
+                  crossOrigin="anonymous"
                   loading="lazy" 
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -600,6 +603,7 @@ const Programs = () => {
                     alt={level.title} 
                     className="w-full h-full object-cover" 
                     referrerPolicy="no-referrer" 
+                    crossOrigin="anonymous"
                     loading="lazy" 
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
@@ -634,6 +638,7 @@ const Mission = () => {
                 alt="Students" 
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
+                crossOrigin="anonymous"
                 loading="lazy"
               />
             </div>
@@ -762,6 +767,7 @@ const Management = () => {
                       alt={leader.name} 
                       className="w-full h-full object-cover" 
                       referrerPolicy="no-referrer" 
+                      crossOrigin="anonymous"
                       loading="lazy" 
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;

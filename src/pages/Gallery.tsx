@@ -82,6 +82,7 @@ export const Gallery = () => {
                       alt={img.caption || img.title}
                       className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                       referrerPolicy="no-referrer"
+                      crossOrigin="anonymous"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = 'https://images.unsplash.com/photo-1523050853064-85a17f009c5d';
@@ -154,6 +155,7 @@ export const Gallery = () => {
                     src={selectedImage} 
                     className="w-full h-full object-contain" 
                     referrerPolicy="no-referrer"
+                    crossOrigin="anonymous"
                   />
                 </div>
                 
