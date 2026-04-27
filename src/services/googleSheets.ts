@@ -54,8 +54,8 @@ export const submitInquiry = async (data: any) => {
   }
 };
 
-// Helper to fix Google Drive links and ensure they are direct image links
-export const fixUrl = (url: any): string => {
+// Helper to fix Google Drive links and ensure they are direct image links or document view links
+export const fixUrl = (url: any, isImage: boolean = true): string => {
   if (!url || typeof url !== 'string') return url || '';
   
   const urls = url.split(',').map(u => u.trim()).filter(Boolean);
@@ -63,13 +63,15 @@ export const fixUrl = (url: any): string => {
     // Handle Google Drive links
     if (u.includes('drive.google.com')) {
       // Improved regex to handle various drive link formats
-      const idMatch = u.match(/\/d\/([a-zA-Z0-9_-]{25,})\//) || 
-                      u.match(/id=([a-zA-Z0-9_-]{25,})/) ||
-                      u.match(/\/file\/d\/([a-zA-Z0-9_-]{25,})/);
+      const idMatch = u.match(/\/d\/([a-zA-Z0-9_-]{25,})/) || 
+                      u.match(/id=([a-zA-Z0-9_-]{25,})/);
       
       if (idMatch && idMatch[1]) {
-        // Direct link format that works most reliably in most contexts
-        return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
+        // If it's for an image tag, use lh3 (direct image). 
+        // For documents like brochure/PDF, use the drive view link.
+        return isImage 
+          ? `https://lh3.googleusercontent.com/d/${idMatch[1]}`
+          : `https://drive.google.com/file/d/${idMatch[1]}/view`;
       }
     }
     return u;
@@ -135,11 +137,12 @@ const fetchData = async (tabName: string) => {
           }
         });
 
-        // Specialized Image Fixing for any column that might contain a URL
+        // Specialized Image/Link Fixing
         Object.keys(obj).forEach(key => {
           const val = obj[key];
-          if (typeof val === 'string' && (key.includes('image') || key.includes('photo') || key.includes('url') || key.includes('picture') || val.startsWith('http'))) {
-            obj[key] = fixUrl(val);
+          if (typeof val === 'string' && (key.includes('image') || key.includes('photo') || key.includes('url') || key.includes('picture') || key.includes('brochure') || key.includes('pdf') || key.includes('link') || val.startsWith('http'))) {
+            const isImage = !(key.includes('brochure') || key.includes('pdf') || key.includes('link') || key.includes('download'));
+            obj[key] = fixUrl(val, isImage);
           }
         });
 
@@ -162,7 +165,7 @@ const fetchData = async (tabName: string) => {
 
         return { 
           ...obj,
-          logo: fixUrl((logoKey ? obj[logoKey] : null) || obj.logo || ''),
+          logo: fixUrl((logoKey ? obj[logoKey] : null) || obj.logo || '', true),
           image: firstImage,
           url: firstImage,
           images: String(finalImages || ''),
@@ -171,7 +174,7 @@ const fetchData = async (tabName: string) => {
           std: obj.std || (stdKey ? obj[stdKey] : '') || (obj[1] || ''),
           date: obj.date || (dateKey ? obj[dateKey] : '') || (obj[3] || ''),
           whatsapp: obj.whatsapp || (whatsappKey ? obj[whatsappKey] : '') || '',
-          brochure: obj.brochure || (brochureKey ? obj[brochureKey] : '') || '',
+          brochure: fixUrl(obj.brochure || (brochureKey ? obj[brochureKey] : '') || '', false),
         };
       }).filter((item: any) => Object.values(item).some(v => v !== null && v !== ''));
 
