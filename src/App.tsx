@@ -52,6 +52,7 @@ export default function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/management" element={<Management />} />
                 <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<Blog />} />
               </Routes>
             </AnimatePresence>
           </Suspense>

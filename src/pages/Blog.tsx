@@ -4,12 +4,13 @@ import { useQuery } from '@tanstack/react-query';
 import { SEO } from '../components/SEO';
 import { Skeleton, ErrorState, EmptyState } from '../components/Feedback';
 import { fetchBlogs } from '../services/googleSheets';
-import { ArrowLeft, ArrowRight, Calendar, Quote, ChevronRight, BookOpen } from 'lucide-react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { ArrowLeft, ArrowRight, Calendar, Quote, ChevronRight, BookOpen, ExternalLink, MapPin, GraduationCap } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { Link } from 'react-router-dom';
 
 export const Blog = () => {
-  const [selectedBlogId, setSelectedBlogId] = React.useState<string | null>(null);
+  const { slug } = useParams();
+  const navigate = useNavigate();
 
   const { data: blogs, isLoading, isError, refetch } = useQuery({
     queryKey: ['blogs'],
@@ -17,12 +18,12 @@ export const Blog = () => {
     staleTime: 1000 * 60 * 10, // 10 minutes cache
   });
 
-  const selectedBlog = blogs?.find(b => b.id === selectedBlogId);
+  const selectedBlog = blogs?.find(b => b.slug === slug);
 
   // Scroll to top when view changes
   React.useEffect(() => {
     window.scrollTo(0, 0);
-  }, [selectedBlogId]);
+  }, [slug]);
 
   if (isLoading) {
     return (
@@ -72,7 +73,7 @@ export const Blog = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatePresence mode="wait">
-          {!selectedBlogId ? (
+          {!slug ? (
             <motion.div
               key="blog-list"
               initial={{ opacity: 0, y: 20 }}
@@ -129,13 +130,13 @@ export const Blog = () => {
                           {blog.shortDescription}
                         </p>
                       </div>
-                      <button 
-                        onClick={() => setSelectedBlogId(blog.id)}
+                      <Link 
+                        to={`/blog/${blog.slug}`}
                         className="w-full py-4 rounded-xl border border-brand-green/10 text-brand-green font-bold text-sm uppercase tracking-widest hover:bg-brand-green hover:text-white transition-all duration-300 flex items-center justify-center space-x-2 bg-brand-cream/5"
                       >
                         <span>Read Fully</span>
                         <ArrowRight size={16} />
-                      </button>
+                      </Link>
                     </div>
                   </motion.div>
                 ))}
@@ -183,7 +184,7 @@ export const Blog = () => {
               className="max-w-4xl mx-auto"
             >
               <button 
-                onClick={() => setSelectedBlogId(null)}
+                onClick={() => navigate('/blog')}
                 className="flex items-center space-x-2 text-brand-green/60 hover:text-brand-gold transition-colors mb-12 group"
               >
                 <div className="bg-brand-green/5 p-2 rounded-full group-hover:bg-brand-gold/10 transition-colors">
@@ -237,6 +238,22 @@ export const Blog = () => {
                     dir="auto"
                     dangerouslySetInnerHTML={{ __html: selectedBlog.content.replace(/\n/g, '<br />') }}
                   />
+                  
+                  {/* Subtle SEO-friendly Internal Links inside content */}
+                  <div className="mt-12 pt-8 border-t border-brand-green/5 space-y-4">
+                    <p className="text-brand-green/80 text-lg flex items-start gap-3">
+                      <GraduationCap className="text-brand-gold shrink-0 mt-1" size={20} />
+                      <span>
+                        If you are looking for admission, visit our <Link to="/admissions" className="text-brand-green font-bold underline decoration-brand-gold/30 hover:decoration-brand-gold transition-all">Admissions page</Link>.
+                      </span>
+                    </p>
+                    <p className="text-brand-green/80 text-lg flex items-start gap-3">
+                      <MapPin className="text-brand-gold shrink-0 mt-1" size={20} />
+                      <span>
+                        You can also <Link to="/contact" className="text-brand-green font-bold underline decoration-brand-gold/30 hover:decoration-brand-gold transition-all">contact our school in Surat</Link> for more details.
+                      </span>
+                    </p>
+                  </div>
                 </div>
 
                 {selectedBlog.images.length > 1 && (
@@ -280,12 +297,12 @@ export const Blog = () => {
                 </div>
 
                 <div className="pt-20 border-t border-brand-green/10 flex flex-col items-center">
-                  <button 
-                    onClick={() => setSelectedBlogId(null)}
+                  <Link 
+                    to="/blog"
                     className="px-12 py-5 rounded-full bg-brand-green text-white font-bold uppercase tracking-widest text-xs hover:bg-brand-gold transition-all duration-300 shadow-xl"
                   >
                     Return to Knowledge Base
-                  </button>
+                  </Link>
                 </div>
               </div>
             </motion.div>

@@ -402,6 +402,7 @@ export const fetchBlogs = async () => {
 
     return {
       id: idx.toString(),
+      slug: (normalizedRow.title || "Untitled Blog").toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-'),
       title: normalizedRow.title || "Untitled Blog",
       subtitle: normalizedRow.subtitle || "",
       shortDescription: normalizedRow.shortdescription || normalizedRow.shortdesc || "",

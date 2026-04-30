@@ -49,7 +49,7 @@ const Navbar = ({ brochure, logo, contact }: { brochure: string; logo: string; c
 
       <div className="max-w-7xl mx-auto px-4 lg:px-6 xl:px-8">
         <div className="flex justify-between h-20 lg:h-24 xl:h-32 items-center">
-          <Link to="/" className="flex items-center space-x-2 xl:space-x-4 shrink-0">
+          <Link to="/" className="flex items-center space-x-2 xl:space-x-4 shrink-0 mr-4">
             <div className="w-10 h-10 lg:w-16 lg:h-16 xl:w-20 xl:h-20 bg-white rounded-full flex items-center justify-center text-brand-green font-georgia text-base lg:text-xl xl:text-2xl font-bold border-2 border-brand-gold overflow-hidden shrink-0 shadow-sm">
               {logo || contact?.logo || contact?.image ? (
                 <img 
@@ -62,8 +62,8 @@ const Navbar = ({ brochure, logo, contact }: { brochure: string; logo: string; c
                 "M"
               )}
             </div>
-            <div className="flex flex-col w-fit">
-              <span className="text-sm lg:text-xl xl:text-3xl font-georgia font-bold tracking-tight text-brand-green leading-none whitespace-nowrap">
+            <div className="flex flex-col w-fit min-w-[120px] lg:min-w-[180px] xl:min-w-[300px]">
+              <span className="text-sm lg:text-[16px] xl:text-3xl font-georgia font-bold tracking-tighter xl:tracking-tight text-brand-green leading-none whitespace-nowrap">
                 AL-MU'MINAH SCHOOL
               </span>
               <div className="h-[1px] bg-brand-green/20 w-full my-1 md:my-2" />
@@ -77,8 +77,8 @@ const Navbar = ({ brochure, logo, contact }: { brochure: string; logo: string; c
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center space-x-2 xl:space-x-8">
-            <div className="flex space-x-1.5 xl:space-x-6">
+          <div className="hidden lg:flex items-center space-x-1 xl:space-x-4 2xl:space-x-8">
+            <div className="flex space-x-1 xl:space-x-3 2xl:space-x-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
