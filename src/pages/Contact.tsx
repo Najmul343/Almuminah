@@ -29,7 +29,7 @@ export const Contact = () => {
       // Try to extract coordinates or place name if possible, otherwise use as query
       return `https://maps.google.com/maps?q=${encodeURIComponent(link)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
     }
-    const mapAddress = contactInfo?.addresses?.[0] || contactInfo?.address || "Al-Mu'minah School, Surat, Gujarat 395003";
+    const mapAddress = contactInfo?.addresses?.[0] || contactInfo?.address || "7/2262, 2263, Kadiya Sheri, Rampura, Kankra Street, Katargam Darwaja, Surat, Gujarat 395003";
     return `https://maps.google.com/maps?q=${encodeURIComponent(mapAddress)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
   };
 
@@ -44,7 +44,7 @@ export const Contact = () => {
     >
       <SEO 
         title="Contact Us | School in Rampura Rander Udhna Surat | Al-Mu'minah School"
-        description="Visit Al-Mu'minah Group of Schools in Surat. Located near Rampura, Katargam Darwaja, and Rander. Contact us for admissions in the best Islamic girls school in Gujarat."
+        description="Visit Al-Mu'minah School in Surat. Located near Rampura, Katargam Darwaja, and Rander. Contact us for admissions in the best Islamic girls school in Gujarat."
         keywords="school in Rander Surat, school near Rampura Surat, English medium school in Udhna Surat, school near Katargam Darwaja, best school near me for girls Surat, Al-Mu'minah School contact"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

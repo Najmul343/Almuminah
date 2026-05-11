@@ -634,9 +634,9 @@ const Mission = () => {
           <div className="relative">
             <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
               <img 
-                src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80" 
-                alt="Students" 
-                className="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/d/1HbMiKVZGHeiBM12PUHkeg2o16JmhEDV9" 
+                alt="Al-Mu'minah School Students" 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 referrerPolicy="no-referrer"
                 crossOrigin="anonymous"
                 loading="lazy"
@@ -654,7 +654,7 @@ const Mission = () => {
               "يَا أَيُّهَا الَّذِينَ آمَنُوا قُوا أَنْفُسَكُمْ وَأَهْلِيكُمْ نَارًا"
             </p>
             <p className="text-brand-green/70 leading-relaxed text-lg md:text-xl">
-              AL-MU’MINAH GROUP OF SCHOOLS is an Islamic School; born out of the ideology that only worldly academic education is not sufficient for the ultimate success of a believer. Our mission is to provide excellence in both academic and Islamic education, preparing our girls for success in this world and the hereafter.
+              AL-MU’MINAH SCHOOL is an Islamic School; born out of the ideology that only worldly academic education is not sufficient for the ultimate success of a believer. Our mission is to provide excellence in both academic and Islamic education, preparing our girls for success in this world and the hereafter.
             </p>
             <div className="pt-4">
               <Link to="/about" className="text-brand-green font-bold border-b-2 border-brand-gold pb-1 hover:text-brand-gold transition-colors">
@@ -972,11 +972,11 @@ export const Home = () => {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
     "name": "Al-Mu'minah School",
-    "alternateName": "Al-Mu'minah Group of Schools Surat",
+    "alternateName": "Al-Mu'minah School Surat",
     "url": "https://almuminah.com",
     "logo": "https://almuminah.com/logo.png",
     "image": "https://almuminah.com/og-image.jpg",
-    "description": "Al-Mu'minah Group of Schools is the leading English medium Islamic girls school in Surat. Modern SSC academics integrated with Quranic Arabic, Tajweed, and Islamic values.",
+    "description": "Al-Mu'minah School is the leading English medium Islamic girls school in Surat. Modern SSC academics integrated with Quranic Arabic, Tajweed, and Islamic values.",
     "telephone": "+91 75743 87345",
     "email": "almuminah.psurat@gmail.com",
     "address": {
@@ -1006,7 +1006,7 @@ export const Home = () => {
     >
       <SEO 
         title="Islamic English Medium School in Surat | Al-Mu'minah School"
-        description="Al-Mu'minah Group of Schools is the leading English medium Islamic girls school in Surat. Modern SSC academics integrated with Quranic Arabic, Tajweed, and Islamic values in a secure environment."
+        description="Al-Mu'minah School is the leading English medium Islamic girls school in Surat. Modern SSC academics integrated with Quranic Arabic, Tajweed, and Islamic values in a secure environment."
         keywords="Islamic school Surat, Muslim girls school Surat, English medium Islamic school Surat, best girls school in Surat, school in Rander Surat, top school in Surat 2026, Arabic education Surat, hijab allowed school, Islamic English school near me, school with Islamic education Surat"
         schemaData={schoolSchema}
       />

@@ -11,7 +11,7 @@ export const About = () => {
       className="py-20"
     >
       <SEO 
-        title="About Us | Al-Mu'minah Group of Schools Surat"
+        title="About Us | Al-Mu'minah School Surat"
         description="Learn about the ideology and vision of Al-Mu'minah School. We integrate Islamic English medium education with modern SSC academics for girls in Surat, Gujarat."
         keywords="Al-Mu'minah School history, Islamic girls school vision, Dr Shehnaz Shaikh, modern Islamic education Surat, hijab allowed girls school"
       />

@@ -136,7 +136,7 @@ export const Admissions = () => {
     >
       <SEO 
         title="Admissions 2026 | Best Girls School in Surat | Al-Mu'minah School"
-        description="Apply for admission at Al-Mu'minah Group of Schools, Surat. Affordable English medium Islamic education for girls. Admission rules, fees structure, and school policies."
+        description="Apply for admission at Al-Mu'minah School, Surat. Affordable English medium Islamic education for girls. Admission rules, fees structure, and school policies."
         keywords="school admission Surat 2026, affordable schools in Surat, English medium schools list Surat, girls only islamic school surat, best school for girls surat"
       />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

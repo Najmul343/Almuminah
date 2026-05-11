@@ -53,7 +53,7 @@ export const Blog = () => {
     <div className="min-h-screen bg-brand-cream/10 pt-32 pb-24">
       <SEO 
         title={selectedBlog ? `${selectedBlog.title} | Al-Mu'minah School Blog` : "Islamic Educational Blog | Al-Mu'minah School Surat"}
-        description={selectedBlog ? selectedBlog.shortDescription : "Read our latest blog posts on Islamic education, girls' academic progress, and parenting from Al-Mu'minah Group of Schools, Surat."}
+        description={selectedBlog ? selectedBlog.shortDescription : "Read our latest blog posts on Islamic education, girls' academic progress, and parenting from Al-Mu'minah School, Surat."}
         keywords={selectedBlog ? `${selectedBlog.title}, islamic blog surat, girls education blog` : "islamic education blog, surat school blog, girls school gujarat blog, al-muminah school articles"}
         schemaData={selectedBlog ? {
           "@context": "https://schema.org",

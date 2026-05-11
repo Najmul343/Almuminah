@@ -239,7 +239,7 @@ const Footer = ({ logo, socials, contact }: { logo: string; socials: any[]; cont
             <ul className="space-y-4 text-sm text-brand-cream/70">
               <li className="flex items-start space-x-3">
                 <MapPin size={18} className="text-brand-gold shrink-0" />
-                <span>{contact?.address || "Surat, Gujarat – 395003"}</span>
+                <span>{contact?.address || "7/2262, 2263, Kadiya Sheri, Rampura, Kankra Street, Katargam Darwaja, Surat, Gujarat 395003"}</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone size={18} className="text-brand-gold shrink-0" />

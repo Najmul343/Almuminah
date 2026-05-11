@@ -240,7 +240,7 @@ const Management = () => {
               </h2>
               <div className="text-brand-green/80 space-y-6 text-lg leading-relaxed">
                 <p>
-                  The founder of Al-Mu'minah Group of Schools is Dr. Shehnaz Shaikh (MBBS, MD), a dedicated educationist committed to establishing quality Islamic academic schools for girls.
+                  The founder of Al-Mu'minah School is Dr. Shehnaz Shaikh (MBBS, MD), a dedicated educationist committed to establishing quality Islamic academic schools for girls.
                 </p>
                 <p>
                   She has compiled a word-for-word English translation of the Qur'an and is a pioneer in teaching this method to children, enabling them to understand the Qur'an deeply while developing strong academic and Islamic foundations.
@@ -318,9 +318,9 @@ const Management = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { name: "AL-MU'MINAH School", location: "Surat" },
-              { name: "Madni School", location: "Surat" },
-              { name: "M.A. Meer School", location: "Surat" }
+              { name: "AL-MU'MINAH SCHOOL", location: "Surat" },
+              { name: "MADNI ISLAMIC SCHOOL (English Medium)", location: "Surat" },
+              { name: "M.A. MEER SCHOOL (Gujrati Medium)", location: "Surat" }
             ].map((school, i) => (
               <div key={school.name} className="bg-white/5 border border-white/10 p-8 rounded-2xl text-center hover:bg-white/10 transition-all group">
                 <h4 className="text-2xl font-serif text-brand-gold mb-2 group-hover:scale-105 transition-transform">{school.name}</h4>

@@ -55,7 +55,7 @@ export const Gallery = () => {
           <h1 className="text-5xl md:text-6xl font-serif text-brand-green mt-4">Our School Gallery</h1>
           <div className="w-24 h-1 bg-brand-gold mx-auto mt-6 rounded-full opacity-30" />
           <p className="text-brand-green/60 mt-8 max-w-2xl mx-auto text-lg italic">
-            Capturing the vibrant moments of learning, growth, and joy at AL-MU'MINAH GROUP OF SCHOOLS.
+            Capturing the vibrant moments of learning, growth, and joy at AL-MU'MINAH SCHOOL.
           </p>
         </div>
 
