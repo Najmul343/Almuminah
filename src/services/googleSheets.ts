@@ -473,6 +473,17 @@ export const fetchContactDetails = async () => {
       }
     }
 
+    // Ensure Pre Primary School address is updated
+    branches = branches.map(b => {
+      const isPrePrimary = b.name.toLowerCase().includes('pre primary') || b.name.toLowerCase().includes('pre-primary');
+      if (isPrePrimary) {
+        if (!b.address || b.address.includes('Kadiya Sheri') || b.address === '7/2262, 2263, Kadiya Sheri, Rampura, Kankra Street, Katargam Darwaja, Surat, Gujarat 395003') {
+          b.address = '23,Alvi Row House,Near Aziz Mohammad Hall,Adajan Patia,Gorat,Surat - 395009';
+        }
+      }
+      return b;
+    });
+
     // For backward compatibility and specialized UI, we return both structured branches and merged fallbacks
     const addresses = [...new Set(branches.map(b => b.address).filter(Boolean))];
     const phones = [...new Set(branches.flatMap(b => [b.phone, b.secondaryPhone]).filter(Boolean))];
@@ -509,14 +520,17 @@ export const fetchContactDetails = async () => {
         },
         {
           name: 'Pre Primary School',
-          address: '7/2262, 2263, Kadiya Sheri, Rampura, Kankra Street, Katargam Darwaja, Surat, Gujarat 395003',
+          address: '23,Alvi Row House,Near Aziz Mohammad Hall,Adajan Patia,Gorat,Surat - 395009',
           phone: '+91 9737239456',
           email: 'almuminah.ppsurat@gmail.com',
           officeHours: ["Monday – Friday: 10:00 AM – 5:00 PM", "Saturday: 9:00 AM – 1:00 PM"],
           mapLink: ""
         }
       ],
-      addresses: ["7/2262, 2263, Kadiya Sheri, Rampura, Kankra Street, Katargam Darwaja, Surat, Gujarat 395003"],
+      addresses: [
+        "7/2262, 2263, Kadiya Sheri, Rampura, Kankra Street, Katargam Darwaja, Surat, Gujarat 395003",
+        "23,Alvi Row House,Near Aziz Mohammad Hall,Adajan Patia,Gorat,Surat - 395009"
+      ],
       primaryPhones: ["+91 7874387345", "+91 9737239456"],
       emails: ["almuminah.psurat@gmail.com", "almuminah.ppsurat@gmail.com"],
       officeHours: ["Monday – Friday: 10:00 AM – 5:00 PM", "Saturday: 9:00 AM – 1:00 PM"],

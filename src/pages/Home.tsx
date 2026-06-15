@@ -111,7 +111,7 @@ const TopperCarousel = () => {
                   </div>
                   <div className="mt-3 flex justify-between items-center px-1">
                     <div className="flex flex-col">
-                      <span className="text-[7px] md:text-[8px] uppercase tracking-widest text-brand-gold font-bold">Board Score ({topper.year})</span>
+                      <span className="text-[7px] md:text-[8px] uppercase tracking-widest text-brand-gold font-bold">Score ({topper.year})</span>
                       <span className="text-base md:text-lg font-serif font-bold text-brand-green">{topper.percentage || topper.score}</span>
                       <span className="text-[7px] md:text-[8px] text-brand-green/60 uppercase font-bold">Class {topper.std}</span>
                     </div>
